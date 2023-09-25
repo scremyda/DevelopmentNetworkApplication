@@ -12,7 +12,7 @@ import (
 func StartServer() {
 	r := gin.Default()
 
-	r.Static("/static", "./static")
+	r.Static("/static", "./backened/static")
 
 	autoparts := []backend.Autoparts{
 		{1, "Прицепное устройство (фаркоп)", "Прицепное устройство Bosal, под фаркоп, в сборе с розеткой, Tesla Model X.", "autopart1.jpg", []string{"1027581-00-D", "1046032-00-C", "10057987-001"}},
@@ -22,17 +22,17 @@ func StartServer() {
 		{5, "Тепловой насос", "Тепловой насос в сборе (теплообменник, бачок расширительный, трубки фреона, клапана, электропроводка), Tesla Model 3, Y.", "autopart5.jpg", []string{"1547595-96-F", ", 1523000-96-E", "1523001-00-D"}},
 	}
 
-	r.LoadHTMLGlob("templates/*")
+	r.LoadHTMLGlob("backened/templates/*")
 
 	r.GET("/", func(c *gin.Context) {
-		r.SetHTMLTemplate(template.Must(template.ParseFiles("./templates/index.html")))
+		r.SetHTMLTemplate(template.Must(template.ParseFiles("./backened/templates/index.html")))
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"Autoparts": autoparts,
 		})
 	})
 
 	r.GET("/autoparts/:id", func(c *gin.Context) {
-		r.SetHTMLTemplate(template.Must(template.ParseFiles("./templates/info.html")))
+		r.SetHTMLTemplate(template.Must(template.ParseFiles("./backened/templates/info.html")))
 		id := c.Param("id")
 		var selectedautopart backend.Autoparts
 		for _, autopart := range autoparts {

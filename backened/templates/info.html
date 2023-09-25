@@ -15,13 +15,13 @@
 <div class="info-card">
     <img class="info-img" src="/static/resources/{{.Image}}" alt="{{.Name}}">
     <h3>{{.Name}}</h3>
-    <span>Доступные для полёта АМС:</span>
+    <span>Номера запчасти:</span>
     <ul>
         {{range .Info}}
             <li>{{.}}</li>
         {{end}}
     </ul>
-    <span>Описание объекта:</span>
+    <span>Описание запчасти:</span>
     <p>{{.Description}}</p>
     <a href="/DevelopmentNetworkApplication/backened/static">На главную</a>
 </div>
