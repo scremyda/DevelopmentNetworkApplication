@@ -10,25 +10,29 @@
     <title>Document</title>
 </head>
 <body>
+<div class="left-body"></div>
 <h1 class="header_h">Запчасти для электромобиля</h1>
 <div class="line"></div>
 <form action="/" method="GET">
     <input type="text" name="search" placeholder="Поиск по названию">
     <button type="submit">Поиск</button>
 </form>
-{{range .Autoparts}}
-<div class="card">
-    <form action="/delete/{{.ID}}" method="POST">
-        <input type="hidden" name="redirectURL" value="/">
-        <button class="delete-button" type="submit">&#10006;</button>
-    </form>
-    {{/*        <a href="/delete/{{.ID}}" class="delete-button">&#10006;</a>*/}}
-    <img src="/static/resources/{{.Image}}" alt="{{.Name}}">
-    <h3>{{.Name}}</h3>
-    <a href="/autoparts/{{.ID}}" class="autopart-info">Подробнее</a>
-
-</div>
+{{if eq (len .Autoparts) 0}}
+<p>Таких запчастей нет</p>
+{{else}}
+    {{range .Autoparts}}
+    <div class="card">
+        <form action="/delete/{{.ID}}" method="POST">
+            <input type="hidden" name="redirectURL" value="/">
+            <button class="delete-button" type="submit">&#10006;</button>
+        </form>
+        {{/*        <a href="/delete/{{.ID}}" class="delete-button">&#10006;</a>*/}}
+        <img src="/static/resources/{{.Image}}" alt="{{.Name}}">
+        <h3>{{.Name}}</h3>
+        <a href="/autoparts/{{.ID}}" class="autopart-info">Подробнее</a>
+    </div>
+    {{end}}
 {{end}}
-
+<div class="right-body"></div>
 </body>
 </html>

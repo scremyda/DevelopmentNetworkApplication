@@ -8,6 +8,7 @@
     margin-right: auto;
     font-size: large;
 }
+
 .info-img{
     width: 60%;
     height: auto;
@@ -180,4 +181,18 @@ button[type="submit"]:hover {
 
 .card a:hover {
     background-color: #5c2a63;
+}
+
+.left-body {
+    float: left; /* Выравнивание элемента влево */
+    width: 30%; /* Задайте желаемую ширину (примерно 30%) */
+    background-color: #f0f0f0; /* Цвет фона, чтобы видеть блоки */
+    /* Дополнительные стили, если необходимо */
+}
+
+.right-body {
+    float: right; /* Выравнивание элемента вправо */
+    width: 70%; /* Задайте желаемую ширину (примерно 70%) */
+    background-color: #e0e0e0; /* Цвет фона, чтобы видеть блоки */
+    /* Дополнительные стили, если необходимо */
 }

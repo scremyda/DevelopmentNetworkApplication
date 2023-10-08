@@ -51,8 +51,9 @@ import (
 
 type Users struct {
 	gorm.Model
-	Login    string `gorm:"type:varchar(255);unique" json:"login"`
-	Password string `gorm:"type:varchar(255)" json:"-"`
+	Login       string `gorm:"type:varchar(255);unique" json:"login"`
+	Password    string `gorm:"type:varchar(255)" json:"-"`
+	IsModerator bool
 }
 type Autopart struct {
 	gorm.Model
@@ -63,21 +64,26 @@ type Autopart struct {
 	Year        int    `gorm:"not null" json:"year"`
 	Image       string `gorm:"type:varchar(255)" json:"image"`
 	IsDelete    bool   `json:"is_delete"`
+	UserID      uint   `json:"-"`
+	User        Users  `gorm:"foreignKey:UserID" json:"-"`
+	Status      string `gorm:"type:varchar(255)" json:"status"`
+	Price       uint   `gorm:"not null" json:"price"`
 }
-type AutopartRequest struct {
+type Autopart_Assembly struct {
 	gorm.Model
-	ASID            uint            `json:"-"`
-	AutopartID      uint            `json:"-"`
-	AssemblyRequest AssemblyRequest `gorm:"foreignKey:ASID" json:"-"`
-	Autopart        Autopart        `gorm:"foreignKey:AutopartID" json:"-"`
+	AssemblyID      uint     `json:"-"`
+	AutopartID      uint     `json:"-"`
+	AssemblyRequest Assembly `gorm:"foreignKey:AssemblyID" json:"-"`
+	Autopart        Autopart `gorm:"foreignKey:AutopartID" json:"-"`
+	Cash            uint     `gorm:"not null" json:"cash"`
 }
 
-type AssemblyRequest struct {
+type Assembly struct {
 	gorm.Model
-	DateStart time.Time `json:"date_start"`
-	DateEnd   time.Time `json:"date_end"`
-	Status    string    `gorm:"type:varchar(255)" json:"status"`
-	Factory   string    `gorm:"type:varchar(255)" json:"factory"`
-	UserID    uint      `json:"-"`
-	User      Users     `gorm:"foreignKey:UserID" json:"-"`
+	DateStart   time.Time `json:"date_start"`
+	DateEnd     time.Time `json:"date_end"`
+	Status      string    `gorm:"type:varchar(255)" json:"status"`
+	Name        string    `gorm:"type:varchar(255)" json:"factory"`
+	ImageURL    string    `gorm:"type:varchar(255)" json:"image"`
+	Description string    `gorm:"type:varchar(255)" json:"description"`
 }

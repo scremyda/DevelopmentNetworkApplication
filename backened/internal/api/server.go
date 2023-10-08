@@ -12,6 +12,8 @@ import (
 func StartServer() {
 	r := gin.Default()
 
+	r.Use(NoCacheMiddleware())
+
 	r.Static("/static", "./backened/static")
 
 	autoparts := []backend.Autoparts{
@@ -25,27 +27,29 @@ func StartServer() {
 	r.LoadHTMLGlob("backened/templates/*")
 
 	r.GET("/", func(c *gin.Context) {
-		r.SetHTMLTemplate(template.Must(template.ParseFiles("./backened/templates/index.html")))
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"Autoparts": autoparts,
-		})
-	})
-
-	r.GET("/autoparts/:id", func(c *gin.Context) {
-		r.SetHTMLTemplate(template.Must(template.ParseFiles("./backened/templates/info.html")))
 		id := c.Param("id")
-		var selectedautopart backend.Autoparts
-		for _, autopart := range autoparts {
-			if strconv.Itoa(autopart.ID) == id {
-				selectedautopart = autopart
-				break
-			}
-		}
+		if id != "" {
+			r.SetHTMLTemplate(template.Must(template.ParseFiles("./backened/templates/info.html")))
 
-		c.HTML(http.StatusOK, "info.html", gin.H{
-			"Autoparts": selectedautopart,
-		})
+			var selectedautopart backend.Autoparts
+			for _, autopart := range autoparts {
+				if strconv.Itoa(autopart.ID) == id {
+					selectedautopart = autopart
+					break
+				}
+			}
+
+			c.HTML(http.StatusOK, "info.html", gin.H{
+				"Autoparts": selectedautopart,
+			})
+		} else {
+			r.SetHTMLTemplate(template.Must(template.ParseFiles("./backened/templates/index.html")))
+			c.HTML(http.StatusOK, "index.html", gin.H{
+				"Autoparts": autoparts,
+			})
+		}
 	})
+
 	r.GET("/search", func(c *gin.Context) {
 		searchQuery := c.Query("search")
 
@@ -59,8 +63,16 @@ func StartServer() {
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"Autoparts": filteredautoparts,
 		})
-
 	})
 
 	r.Run(":8080")
+}
+
+func NoCacheMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+		c.Header("Pragma", "no-cache")
+		c.Header("Expires", "0")
+		c.Next()
+	}
 }
