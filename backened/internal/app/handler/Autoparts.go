@@ -22,7 +22,7 @@ func (h *Handler) AutopartsList(ctx *gin.Context) {
 
 		filteredautoparts, err := h.Repository.Searchautopart(searchQuery)
 		if err != nil {
-			// обработка ошибки
+
 		}
 		ctx.HTML(http.StatusOK, "index.html", gin.H{
 			"Autoparts": filteredautoparts,

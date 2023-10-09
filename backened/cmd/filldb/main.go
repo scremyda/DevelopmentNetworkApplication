@@ -43,8 +43,8 @@ func main() {
 		{Name: "Двигатель Tesla Model Y", Description: "Задний мотор, ротор(якорь) мотора, Tesla Model 3, Y, 439210", Brand: "Tesla",
 			Models: "Tesla Model Y", Year: 2020, Image: "image2.jpg", IsDelete: false, UserID: 2, Status: "Available", Price: 45457},
 
-		{Name: "Двигатель Tesla Model 3", Description: "Задний мотор, статор и ротор (якорь), Tesla Model 3, Y, 112098000C", Brand: "Tesla",
-			Models: "Tesla Model 3", Year: 2020, Image: "image3.jpg", IsDelete: false, UserID: 3, Status: "Available", Price: 45700},
+		{Name: "Задний мотор и стартор Tesla Model S", Description: "Задний мотор, статор и ротор (якорь), Tesla Model S, Y, 112098000C", Brand: "Tesla",
+			Models: "Tesla Model 3", Year: 2020, Image: "image3.jpg", IsDelete: false, UserID: 3, Status: "Available", Price: 50700},
 	}
 	assemblies := []ds.Assembly{
 		{DateStart: time.Now(), DateEnd: time.Now().Add(24 * time.Hour), Status: "Pending", Name: "Завод по сборке в Москве", ImageURL: "factory1.jpg", Description: "Завод по сборке в Москве"},
