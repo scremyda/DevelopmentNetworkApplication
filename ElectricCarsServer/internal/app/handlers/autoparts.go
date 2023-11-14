@@ -11,17 +11,14 @@ import (
 	"time"
 )
 
-//CitiesList godoc
-//@Summary Get a list of cities
-//@Description Get a list of cities with optional filtering by city name.
-//@Tags cities
-//@Produce json
-//@Param city query string false "City name for filtering"
-//@Success 200 {array} ds.City
-//@Router /cities [get]
-
 func (h *Handler) AutopartsList(ctx *gin.Context) {
-	autoparts, err := h.Repository.AutopartsList()
+	queryBrand, _ := ctx.GetQuery("brand")
+
+	autoparts, err := h.Repository.AutopartsList(queryBrand)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
 	if err != nil {
 		h.errorHandler(ctx, http.StatusInternalServerError, err)
 		return
@@ -31,9 +28,9 @@ func (h *Handler) AutopartsList(ctx *gin.Context) {
 }
 
 func (h *Handler) AutopartById(ctx *gin.Context) {
-	idStr := ctx.Query("autopart")
+	idStr := ctx.Param("id")
 	if idStr == "" {
-		err := errors.New("error no query")
+		err := errors.New("error no get param")
 		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return
 	}
@@ -193,7 +190,7 @@ func (h *Handler) AddToAssembly(ctx *gin.Context) { // TODO: Создавать 
 	assembly := AddToAssemblyID.Assembly
 	if autopartDetails.Autopart_name == "" || autopartDetails.Autopart_id <= 0 ||
 		assembly.Status == utils.DeletedString || assembly.Name == "" {
-		err := errors.New("некорретные данные")
+		err := errors.New("некорректные данные")
 		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return
 	}

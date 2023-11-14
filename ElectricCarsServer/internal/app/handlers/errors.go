@@ -14,4 +14,6 @@ var (
 	headerNotFound              = errors.New("no file uploaded")
 	destinationOrCityIsEmpty    = errors.New("destination or city cannot be empty")
 	serialNumberCannotBeEmpty   = errors.New("param `serial_number` cannot be empty")
+
+	userIsNotModerator = errors.New("user is not moderator")
 )

@@ -3,11 +3,17 @@ package repo
 import (
 	"ElectricCarsServer/ElectricCarsServer/internal/app/ds"
 	"fmt"
+	"gorm.io/gorm"
 )
 
-func (r *Repository) AutopartsList() (*[]ds.Autopart, error) {
+func (r *Repository) AutopartsList(brand string) (*[]ds.Autopart, error) {
 	var autoparts []ds.Autopart
-	result := r.db.Where("status = ?", false).Find(&autoparts)
+	var result *gorm.DB
+	if brand == "" {
+		result = r.db.Where("status = ?", false).Find(&autoparts)
+	} else {
+		result = r.db.Where("status = ? AND brand = ?", false, brand).Find(&autoparts)
+	}
 	return &autoparts, result.Error
 }
 

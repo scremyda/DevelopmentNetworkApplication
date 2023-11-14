@@ -1,0 +1,543 @@
+{
+	"info": {
+		"_postman_id": "df6dbf9c-946d-4980-bbb3-8737111a8590",
+		"name": "AutopartsServer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30122325"
+	},
+	"item": [
+		{
+			"name": "autopart(Услуги)",
+			"item": [
+				{
+					"name": "autoparts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/api/autoparts/get-all?brand=Tesla",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"autoparts",
+								"get-all"
+							],
+							"query": [
+								{
+									"key": "brand",
+									"value": "Tesla"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "autoparts By ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/api/autoparts/2",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"autoparts",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "autoparts",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"name\": \"Двигатель Tesla Model 3\",\n    \"description\": \"Задний мотор, ротор(якорь) мотора, Tesla Model 3, Y, 439210\",\n    \"brand\": \"Tesla\",\n    \"model\": \"Tesla Model Y\",\n    \"year\": 2020,\n    \"user_id\": 1,\n    \"status\": \"Черновик создан\",\n    \"price\": 45457\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/api/autoparts",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"autoparts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "autoparts/upload-image",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/scremyda/Изображения/Снимки экрана/Снимок экрана от 2023-11-12 14-29-17.png"
+								},
+								{
+									"key": "autopart_id",
+									"value": "5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/api/autoparts/upload-image",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"autoparts",
+								"upload-image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "autoparts/add-to-assembly Черновик",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"autopart\": {\n    \"autopart_id\": 2,\n    \"name\": \"Двигатель Tesla Model 3\"\n  },\n  \"assembly\": {\n    \"factory\": \"Завод по сборке 2\"\n  }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/api/autoparts/add-to-assembly",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"autoparts",
+								"add-to-assembly"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "autoparts/upload-image",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/scremyda/Изображения/Снимки экрана/Снимок экрана от 2023-11-12 14-29-17.png"
+								},
+								{
+									"key": "autopart_id",
+									"value": "5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/api/autoparts/upload-image",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"autoparts",
+								"upload-image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "autoparts",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"autopart_id\": 1,\n    \"name\": \"Двигатель Tesla Model 3\",\n    \"description\": \"Задний мотор, ротор(якорь) мотора, Tesla Model 3, Y, 439210\",\n    \"brand\": \"Tesla\",\n    \"model\": \"Tesla Model Y\",\n    \"year\": 2020,\n    \"user_id\": 1,\n    \"is_deleted\": false,\n    \"price\": 45457\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/api/autoparts",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"autoparts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "autoparts",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"autopart_id\": 5 }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/api/autoparts",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"autoparts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "assembly(Заявки)",
+			"item": [
+				{
+					"name": "assembly",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/api/assembly/get-all?status=Черновик&start=0001-01-01T02:30:17&end=0002-01-01T02:30:17",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assembly",
+								"get-all"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "Черновик"
+								},
+								{
+									"key": "start",
+									"value": "0001-01-01T02:30:17"
+								},
+								{
+									"key": "end",
+									"value": "0002-01-01T02:30:17"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "assembly By ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/api/assembly/2",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assembly",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "assembly",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"factory_id\": 1,\n    \"date_start\": \"2023-10-24T10:00:00Z\",\n    \"date_end\": \"2023-10-25T15:00:00Z\",\n    \"date_processing\": \"2023-10-25T10:00:00Z\",\n    \"name\": \"Завод по сборке в Москве\",\n    \"description\": \"Завод по сборке в Москве\",\n    \"status\": \"Черновик\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/api/assembly",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assembly"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "assembly Сформировать",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"factory_id\": 1,\n    \"user_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/api/assembly/form",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assembly",
+								"form"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "assembly Завершить",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"factory_id\": 1,\n    \"user_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/api/assembly/complete",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assembly",
+								"complete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "assembly Отклонить",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"factory_id\": 1,\n    \"user_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/api/assembly/reject",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assembly",
+								"reject"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "assembly Удалить",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"factory_id\": 1,\n    \"user_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/api/assembly",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assembly"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": []
+		}
+	]
+}

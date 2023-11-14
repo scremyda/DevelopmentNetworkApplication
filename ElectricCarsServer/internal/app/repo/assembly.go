@@ -3,13 +3,33 @@ package repo
 import (
 	"ElectricCarsServer/ElectricCarsServer/internal/app/ds"
 	"ElectricCarsServer/ElectricCarsServer/internal/app/utils"
-	"fmt"
+	"errors"
 	"gorm.io/gorm/clause"
+	"time"
 )
 
-func (r *Repository) AssembliesList() (*[]ds.Assembly, error) {
+var (
+	NotSameUser      = errors.New("not the same user")
+	AssemblyNotFound = errors.New("assembly not found")
+	UserNotFound     = errors.New("user not found")
+)
+
+func (r *Repository) AssembliesList(status, start, end string) (*[]ds.Assembly, error) {
 	var assemblies []ds.Assembly
-	result := r.db.Where("status != ?", utils.DeletedString).Find(&assemblies)
+	query := r.db.Where("status != ?", utils.DeletedString)
+
+	if status != "" {
+		query = query.Where("status = ?", status)
+	}
+
+	if start != "" {
+		query = query.Where("date_start_of_processing >= ?", start)
+	}
+
+	if end != "" {
+		query = query.Where("date_start_of_processing <= ?", end)
+	}
+	result := query.Find(&assemblies)
 	return &assemblies, result.Error
 }
 
@@ -41,18 +61,18 @@ func (r *Repository) AssemblyByID(id uint) (*[]ds.Autopart, *ds.Assembly, error)
 //	return result.Error
 //}
 
-func (r *Repository) DeleteAssembly(id uint) error {
-	var assembly ds.Assembly
-	if result := r.db.First(&assembly, id); result.Error != nil {
-		return result.Error
-	}
-	if assembly.ID == 0 {
-		return fmt.Errorf("assembly not found")
-	}
-	assembly.Status = utils.DeletedString
-	result := r.db.Save(&assembly)
-	return result.Error
-}
+//func (r *Repository) DeleteAssembly(id uint) error {
+//	var assembly ds.Assembly
+//	if result := r.db.First(&assembly, id); result.Error != nil {
+//		return result.Error
+//	}
+//	if assembly.ID == 0 {
+//		return fmt.Errorf("assembly not found")
+//	}
+//	assembly.Status = utils.DeletedString
+//	result := r.db.Save(&assembly)
+//	return result.Error
+//}
 
 func (r *Repository) UpdateAssembly(updatedAssembly *ds.Assembly) error {
 	oldAssembly := ds.Assembly{}
@@ -80,4 +100,102 @@ func (r *Repository) UpdateAssembly(updatedAssembly *ds.Assembly) error {
 	*updatedAssembly = oldAssembly
 	result := r.db.Save(updatedAssembly)
 	return result.Error
+}
+
+func (r *Repository) UserAdmin(userID uint) (bool, error) {
+	var user ds.Users
+
+	result := r.db.First(&user, userID)
+	if result.Error != nil {
+		return false, result.Error
+	}
+
+	if user.ID == 0 {
+		return false, UserNotFound
+	}
+
+	return user.IsModerator, nil
+}
+
+func (r *Repository) SameUser(userID uint, factoryID uint) error {
+	var assembly ds.Assembly
+
+	result := r.db.First(&assembly, factoryID)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if userID != assembly.Creator {
+		return NotSameUser
+	}
+
+	return nil
+}
+
+func (r *Repository) DeleteAssembly(formAssembly ds.AssemblyForm) (ds.Assembly, error) {
+	oldAssembly := ds.Assembly{}
+	if result := r.db.First(&oldAssembly, formAssembly.Factory_id); result.Error != nil {
+		return ds.Assembly{}, result.Error
+	}
+
+	if oldAssembly.ID == 0 {
+		return ds.Assembly{}, AssemblyNotFound
+	}
+
+	oldAssembly.Status = utils.DeletedString
+	oldAssembly.DateEnd = time.Now()
+
+	result := r.db.Save(oldAssembly)
+	return oldAssembly, result.Error
+}
+
+func (r *Repository) FormAssembly(formAssembly ds.AssemblyForm) (ds.Assembly, error) {
+	oldAssembly := ds.Assembly{}
+	if result := r.db.First(&oldAssembly, formAssembly.Factory_id); result.Error != nil {
+		return ds.Assembly{}, result.Error
+	}
+
+	if oldAssembly.ID == 0 {
+		return ds.Assembly{}, AssemblyNotFound
+	}
+
+	oldAssembly.Status = utils.ExistsString
+	oldAssembly.DateStartOfProcessing = time.Now()
+
+	result := r.db.Save(oldAssembly)
+	return oldAssembly, result.Error
+}
+
+func (r *Repository) CompleteAssembly(formAssembly ds.AssemblyForm) (ds.Assembly, error) {
+	oldAssembly := ds.Assembly{}
+	if result := r.db.First(&oldAssembly, formAssembly.Factory_id); result.Error != nil {
+		return ds.Assembly{}, result.Error
+	}
+
+	if oldAssembly.ID == 0 {
+		return ds.Assembly{}, AssemblyNotFound
+	}
+
+	oldAssembly.Status = utils.Сompleted
+	oldAssembly.DateEnd = time.Now()
+
+	result := r.db.Save(oldAssembly)
+	return oldAssembly, result.Error
+}
+
+func (r *Repository) RejectAssembly(formAssembly ds.AssemblyForm) (ds.Assembly, error) {
+	oldAssembly := ds.Assembly{}
+	if result := r.db.First(&oldAssembly, formAssembly.Factory_id); result.Error != nil {
+		return ds.Assembly{}, result.Error
+	}
+
+	if oldAssembly.ID == 0 {
+		return ds.Assembly{}, AssemblyNotFound
+	}
+
+	oldAssembly.Status = utils.Rejected
+	oldAssembly.DateEnd = time.Now()
+
+	result := r.db.Save(oldAssembly)
+	return oldAssembly, result.Error
 }

@@ -5,7 +5,7 @@ const (
 	EmptyInt      = 0
 	DeletedString = "Удален"
 	ExistsString  = "Сформирован"
-	DraftString   = "Черновик создан"
+	DraftString   = "Черновик"
 	Сompleted     = "Завершен"
 	Rejected      = "Отклонен"
 )

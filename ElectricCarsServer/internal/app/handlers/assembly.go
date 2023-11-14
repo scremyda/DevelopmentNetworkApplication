@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"ElectricCarsServer/ElectricCarsServer/internal/app/ds"
+	"ElectricCarsServer/ElectricCarsServer/internal/app/repo"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -9,7 +10,13 @@ import (
 )
 
 func (h *Handler) AssembliesList(ctx *gin.Context) {
-	assemblies, err := h.Repository.AssembliesList()
+	queryStatus, _ := ctx.GetQuery("status")
+
+	queryStart, _ := ctx.GetQuery("start")
+
+	queryEnd, _ := ctx.GetQuery("end")
+
+	assemblies, err := h.Repository.AssembliesList(queryStatus, queryStart, queryEnd)
 
 	if err != nil {
 		h.errorHandler(ctx, http.StatusBadRequest, err)
@@ -19,9 +26,9 @@ func (h *Handler) AssembliesList(ctx *gin.Context) {
 }
 
 func (h *Handler) AssemblyById(ctx *gin.Context) {
-	assemblyStringID := ctx.Query("assembly")
+	assemblyStringID := ctx.Param("id")
 	if assemblyStringID == "" {
-		err := errors.New("error no query")
+		err := errors.New("error no get param")
 		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return
 	}
@@ -61,25 +68,25 @@ func (h *Handler) AssemblyById(ctx *gin.Context) {
 //	h.successAddHandler(ctx, "assembly_id", assembly.ID)
 //}
 
-func (h *Handler) DeleteAssembly(ctx *gin.Context) {
-	var request struct {
-		ID uint `json:"id"`
-	}
-	if err := ctx.BindJSON(&request); err != nil {
-		h.errorHandler(ctx, http.StatusBadRequest, err)
-		return
-	}
-	if request.ID == 0 {
-		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
-		return
-	}
-	if err := h.Repository.DeleteAssembly(request.ID); err != nil {
-		h.errorHandler(ctx, http.StatusInternalServerError, err)
-		return
-	}
-
-	h.successHandler(ctx, "assembly_id", request.ID)
-}
+//func (h *Handler) DeleteAssembly(ctx *gin.Context) {
+//	var request struct {
+//		ID uint `json:"id"`
+//	}
+//	if err := ctx.BindJSON(&request); err != nil {
+//		h.errorHandler(ctx, http.StatusBadRequest, err)
+//		return
+//	}
+//	if request.ID == 0 {
+//		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
+//		return
+//	}
+//	if err := h.Repository.DeleteAssembly(request.ID); err != nil {
+//		h.errorHandler(ctx, http.StatusInternalServerError, err)
+//		return
+//	}
+//
+//	h.successHandler(ctx, "assembly_id", request.ID)
+//}
 
 func (h *Handler) UpdateAssembly(ctx *gin.Context) {
 	var updatedAssembly ds.Assembly
@@ -105,6 +112,168 @@ func (h *Handler) UpdateAssembly(ctx *gin.Context) {
 		"status":      updatedAssembly.Status,
 		"description": updatedAssembly.Description,
 	})
+}
+
+func (h *Handler) FormAssembly(ctx *gin.Context) {
+	var formAssembly ds.AssemblyForm
+	if err := ctx.BindJSON(&formAssembly); err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+	if formAssembly.User_id == 0 {
+		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
+		return
+	}
+
+	if formAssembly.Factory_id == 0 {
+		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
+		return
+	}
+
+	err := h.Repository.SameUser(formAssembly.User_id, formAssembly.Factory_id)
+	if err != nil {
+		if errors.Is(err, repo.NotSameUser) {
+			h.errorHandler(ctx, http.StatusBadRequest, err)
+			return
+		}
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	updatedAssembly, err := h.Repository.FormAssembly(formAssembly)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	h.successHandler(ctx, "formed_assembly", updatedAssembly)
+}
+
+func (h *Handler) CompleteAssembly(ctx *gin.Context) {
+	var formAssembly ds.AssemblyForm
+	if err := ctx.BindJSON(&formAssembly); err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+	if formAssembly.User_id == 0 {
+		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
+		return
+	}
+
+	if formAssembly.Factory_id == 0 {
+		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
+		return
+	}
+
+	isModerator, err := h.Repository.UserAdmin(formAssembly.User_id)
+	if err != nil {
+		if errors.Is(err, repo.UserNotFound) {
+			h.errorHandler(ctx, http.StatusBadRequest, err)
+			return
+		}
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	if isModerator == false {
+		h.errorHandler(ctx, http.StatusBadRequest, userIsNotModerator)
+		return
+	}
+
+	updatedAssembly, err := h.Repository.CompleteAssembly(formAssembly)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	h.successHandler(ctx, "completed_assembly", updatedAssembly)
+}
+
+func (h *Handler) RejectAssembly(ctx *gin.Context) {
+	var formAssembly ds.AssemblyForm
+	if err := ctx.BindJSON(&formAssembly); err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+	if formAssembly.User_id == 0 {
+		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
+		return
+	}
+
+	if formAssembly.Factory_id == 0 {
+		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
+		return
+	}
+
+	isModerator, err := h.Repository.UserAdmin(formAssembly.User_id)
+	if err != nil {
+		if errors.Is(err, repo.UserNotFound) {
+			h.errorHandler(ctx, http.StatusBadRequest, err)
+			return
+		}
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	if isModerator == false {
+		h.errorHandler(ctx, http.StatusBadRequest, userIsNotModerator)
+		return
+	}
+
+	updatedAssembly, err := h.Repository.RejectAssembly(formAssembly)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	h.successHandler(ctx, "rejected_assembly", updatedAssembly)
+}
+
+func (h *Handler) DeleteAssembly(ctx *gin.Context) {
+	var formAssembly ds.AssemblyForm
+	if err := ctx.BindJSON(&formAssembly); err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+	if formAssembly.User_id == 0 {
+		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
+		return
+	}
+
+	if formAssembly.Factory_id == 0 {
+		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
+		return
+	}
+
+	isModerator, err := h.Repository.UserAdmin(formAssembly.User_id)
+	if err != nil {
+		if errors.Is(err, repo.UserNotFound) {
+			h.errorHandler(ctx, http.StatusBadRequest, err)
+			return
+		}
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	errSameUser := h.Repository.SameUser(formAssembly.User_id, formAssembly.Factory_id)
+	if errSameUser == nil || isModerator == true {
+		updatedAssembly, err := h.Repository.DeleteAssembly(formAssembly)
+		if err != nil {
+			h.errorHandler(ctx, http.StatusInternalServerError, err)
+			return
+		}
+
+		h.successHandler(ctx, "deleted_assembly", updatedAssembly)
+	}
+	if errSameUser != nil {
+		if errors.Is(errSameUser, repo.NotSameUser) {
+			h.errorHandler(ctx, http.StatusBadRequest, errSameUser)
+			return
+		}
+		h.errorHandler(ctx, http.StatusInternalServerError, errSameUser)
+		return
+	}
+
 }
 
 //func (h *Handler) DeleteAssembly(ctx *gin.Context) {

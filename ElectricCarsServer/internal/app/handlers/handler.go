@@ -12,12 +12,17 @@ const (
 	baseURL = "api"
 
 	autoparts        = baseURL + "/autoparts"
+	autopartsID      = baseURL + "/autoparts/:id"
 	autopartsList    = baseURL + "/autoparts/get-all"
 	addAutopartImage = baseURL + "/autoparts/upload-image"
-	addAssembly      = autoparts + "/add-to-assembly"
+	addAssembly      = baseURL + "/autoparts/add-to-assembly"
 
-	assembly     = baseURL + "/assembly"
-	assemblyList = baseURL + "/assembly/get-all"
+	assembly         = baseURL + "/assembly"
+	assemblyForm     = baseURL + "/assembly/form"
+	assemblyComplete = baseURL + "/assembly/complete"
+	assemblyReject   = baseURL + "/assembly/reject"
+	assemblyID       = baseURL + "/assembly/:id"
+	assemblyList     = baseURL + "/assembly/get-all"
 )
 
 type Handler struct {
@@ -36,20 +41,24 @@ func NewHandler(l *logrus.Logger, r *repo.Repository, m *minio.Client) *Handler 
 
 func (h *Handler) RegisterHandler(router *gin.Engine) {
 	router.GET(autopartsList, h.AutopartsList)
-	router.GET(autoparts, h.AutopartById)
+	router.GET(autopartsID, h.AutopartById)
 
 	router.POST(autoparts, h.AddAutopart)
 	router.POST(addAutopartImage, h.AddImage)
 	router.POST(addAssembly, h.AddToAssembly)
 
 	router.PUT(autoparts, h.UpdateAutopart)
+	router.PUT(addAutopartImage, h.AddImage)
 
 	router.DELETE(autoparts, h.DeleteAutopart)
 	//=============================================//
 	router.GET(assemblyList, h.AssembliesList)
-	router.GET(assembly, h.AssemblyById)
+	router.GET(assemblyID, h.AssemblyById)
 
 	router.PUT(assembly, h.UpdateAssembly)
+	router.PUT(assemblyForm, h.FormAssembly)
+	router.PUT(assemblyComplete, h.CompleteAssembly)
+	router.PUT(assemblyReject, h.RejectAssembly)
 
 	router.DELETE(assembly, h.DeleteAssembly)
 
