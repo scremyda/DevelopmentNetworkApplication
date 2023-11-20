@@ -29,6 +29,7 @@ func (r *Repository) AssembliesList(status, start, end string) (*[]ds.Assembly, 
 	if end != "" {
 		query = query.Where("date_start_of_processing <= ?", end)
 	}
+	query = query.Order("id ASC")
 	result := query.Find(&assemblies)
 	return &assemblies, result.Error
 }
@@ -90,9 +91,6 @@ func (r *Repository) UpdateAssembly(updatedAssembly *ds.Assembly) error {
 	}
 	if updatedAssembly.DateStartOfProcessing.String() != utils.EmptyDate {
 		oldAssembly.DateStartOfProcessing = updatedAssembly.DateStartOfProcessing
-	}
-	if updatedAssembly.Status != "" {
-		oldAssembly.Status = updatedAssembly.Status
 	}
 	if updatedAssembly.Description != "" {
 		oldAssembly.Description = updatedAssembly.Description

@@ -235,12 +235,12 @@ func (h *Handler) DeleteAssembly(ctx *gin.Context) {
 		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return
 	}
-	if formAssembly.User_id == 0 {
+	if formAssembly.User_id <= 0 {
 		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
 		return
 	}
 
-	if formAssembly.Factory_id == 0 {
+	if formAssembly.Factory_id <= 0 {
 		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
 		return
 	}

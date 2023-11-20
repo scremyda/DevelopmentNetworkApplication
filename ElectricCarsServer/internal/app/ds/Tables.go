@@ -7,8 +7,8 @@ import (
 type Users struct {
 	ID          uint   `gorm:"primary_key" json:"user_id"`
 	Login       string `gorm:"type:varchar(255);unique" json:"login"`
-	Password    string `gorm:"type:varchar(255)" json:"-"`
-	IsModerator bool
+	Password    string `gorm:"type:varchar(255)" json:"password"`
+	IsModerator bool   `json:"is_moderator"`
 }
 type Autopart struct {
 	ID          uint    `gorm:"primary_key" json:"autopart_id"`
@@ -25,8 +25,8 @@ type Autopart struct {
 }
 type Autopart_Assembly struct {
 	ID              uint     `gorm:"primary_key" json:"autopart_factory_id"`
-	AssemblyID      uint     `json:"-"`
-	AutopartID      uint     `json:"-"`
+	AssemblyID      uint     `json:"factory_id"`
+	AutopartID      uint     `json:"autopart_id"`
 	AssemblyRequest Assembly `gorm:"foreignKey:AssemblyID" json:"-"`
 	Autopart        Autopart `gorm:"foreignKey:AutopartID" json:"-"`
 	Count           int      `json:"count"`
@@ -55,7 +55,7 @@ type AutopartDetails struct {
 
 type AddToAssemblyID struct {
 	AutopartDetails AutopartDetails `json:"autopart"`
-	Assembly        Assembly        `json:"assembly"`
+	User_id         uint            `json:"user_id"`
 }
 
 type AssemblyForm struct {

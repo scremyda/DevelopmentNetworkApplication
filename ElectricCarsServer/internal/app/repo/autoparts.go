@@ -2,8 +2,11 @@ package repo
 
 import (
 	"ElectricCarsServer/ElectricCarsServer/internal/app/ds"
+	"ElectricCarsServer/ElectricCarsServer/internal/app/utils"
+	"errors"
 	"fmt"
 	"gorm.io/gorm"
+	"time"
 )
 
 func (r *Repository) AutopartsList(brand string) (*[]ds.Autopart, error) {
@@ -55,25 +58,62 @@ func (r *Repository) AddAutopart(autopart *ds.Autopart) error {
 	return result.Error
 }
 
-func (r *Repository) AddToAssembly(autopartDetails *ds.AutopartDetails, assembly *ds.Assembly) error {
+func (r *Repository) AddToAssembly(autopartDetails *ds.AddToAssemblyID) error {
 	var autopart ds.Autopart
-	if err := r.db.Where("id = ? AND name = ?", autopartDetails.Autopart_id, autopartDetails.Autopart_name).
+	if err := r.db.Where("id = ? AND name = ?", autopartDetails.AutopartDetails.Autopart_id,
+		autopartDetails.AutopartDetails.Autopart_name).
 		First(&autopart).Error; err != nil {
 		return err
 	}
-	assembly.Creator = autopart.UserID
-	result := r.db.Where("name = ?", assembly.Name).FirstOrCreate(&assembly)
-	if result.Error != nil {
-		return result.Error
-	}
-	autopartAssembly := ds.Autopart_Assembly{
-		AutopartID: uint(autopartDetails.Autopart_id),
-		AssemblyID: assembly.ID,
-		Count:      1,
+	request := ds.Assembly{
+		DateStart: time.Now(),
+		Status:    utils.DraftString,
+		Creator:   autopartDetails.User_id,
 	}
 
-	if err := r.db.Create(&autopartAssembly).Error; err != nil {
-		return err
+	// Проверка наличия записи с Status = utils.DraftString
+	var existingAssembly ds.Assembly
+	result := r.db.First(&existingAssembly, "creator = ? AND status = ?", autopartDetails.User_id, utils.DraftString)
+
+	if result.Error != nil {
+		// Если записи с Status = utils.DraftString у пользователя нет, создаем новую запись
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			if err := r.db.Create(&request).Error; err != nil {
+				return err
+			}
+		} else {
+			// Обработка других ошибок базы данных
+			return result.Error
+		}
+	}
+
+	autopartID := uint(autopartDetails.AutopartDetails.Autopart_id)
+	assemblyID := request.ID
+	if assemblyID == 0 {
+		assemblyID = existingAssembly.ID
+	}
+
+	// Поиск записи по autopartID и assemblyID
+	var autopartAssembly ds.Autopart_Assembly
+	result = r.db.First(&autopartAssembly, "autopart_id = ? AND assembly_id = ?", autopartID, assemblyID)
+
+	if result.Error != nil {
+		// Если записи нет, создаем новую запись
+		autopartAssembly = ds.Autopart_Assembly{
+			AutopartID: autopartID,
+			AssemblyID: assemblyID,
+			Count:      1,
+		}
+
+		if err := r.db.Create(&autopartAssembly).Error; err != nil {
+			return err
+		}
+	} else {
+		// Если запись существует, увеличиваем Count на 1 и обновляем запись
+		autopartAssembly.Count++
+		if err := r.db.Save(&autopartAssembly).Error; err != nil {
+			return err
+		}
 	}
 
 	return nil

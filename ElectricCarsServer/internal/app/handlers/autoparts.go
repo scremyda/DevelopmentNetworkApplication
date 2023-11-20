@@ -2,13 +2,11 @@ package handlers
 
 import (
 	"ElectricCarsServer/ElectricCarsServer/internal/app/ds"
-	"ElectricCarsServer/ElectricCarsServer/internal/app/utils"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"mime/multipart"
 	"net/http"
 	"strconv"
-	"time"
 )
 
 func (h *Handler) AutopartsList(ctx *gin.Context) {
@@ -62,7 +60,7 @@ func (h *Handler) DeleteAutopart(ctx *gin.Context) {
 		return
 	}
 	if err := h.Repository.DeleteAutopart(uint(id)); err != nil {
-		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		h.errorHandler(ctx, http.StatusInternalServerError, err) // TODO: catch not found
 		return
 	}
 
@@ -117,7 +115,7 @@ func (h *Handler) AddAutopart(ctx *gin.Context) {
 		h.errorHandler(ctx, http.StatusBadRequest, idMustBeEmpty)
 		return
 	}
-	if newAutopart.UserID == 0 {
+	if newAutopart.UserID <= 0 {
 		h.errorHandler(ctx, http.StatusBadRequest, idCantBeEmpty)
 		return
 	}
@@ -133,11 +131,11 @@ func (h *Handler) AddAutopart(ctx *gin.Context) {
 		h.errorHandler(ctx, http.StatusBadRequest, autopartModelsCannotBeEmpty)
 		return
 	}
-	if newAutopart.Year == 0 {
+	if newAutopart.Year <= 0 {
 		h.errorHandler(ctx, http.StatusBadRequest, autopartYearCannotBeEmpty)
 		return
 	}
-	if newAutopart.Price == 0 {
+	if newAutopart.Price <= 0 {
 		h.errorHandler(ctx, http.StatusBadRequest, autopartPriceCannotBeEmpty)
 		return
 	}
@@ -184,21 +182,18 @@ func (h *Handler) AddToAssembly(ctx *gin.Context) { // TODO: Создавать 
 		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return
 	}
-	autopartDetails := AddToAssemblyID.AutopartDetails
-	AddToAssemblyID.Assembly.DateStart = time.Now()
-	AddToAssemblyID.Assembly.Status = utils.DraftString
-	assembly := AddToAssemblyID.Assembly
-	if autopartDetails.Autopart_name == "" || autopartDetails.Autopart_id <= 0 ||
-		assembly.Status == utils.DeletedString || assembly.Name == "" {
+
+	if AddToAssemblyID.AutopartDetails.Autopart_name == "" || AddToAssemblyID.AutopartDetails.Autopart_id <= 0 ||
+		AddToAssemblyID.User_id <= 0 {
 		err := errors.New("некорректные данные")
 		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return
 	}
 
-	if err := h.Repository.AddToAssembly(&autopartDetails, &assembly); err != nil {
+	if err := h.Repository.AddToAssembly(&AddToAssemblyID); err != nil {
 		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return
 	}
 
-	h.successAddHandler(ctx, "autopart_id", autopartDetails.Autopart_id)
+	h.successAddHandler(ctx, "autopart_id", AddToAssemblyID.AutopartDetails.Autopart_id)
 }

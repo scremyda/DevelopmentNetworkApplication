@@ -23,6 +23,10 @@ const (
 	assemblyReject   = baseURL + "/assembly/reject"
 	assemblyID       = baseURL + "/assembly/:id"
 	assemblyList     = baseURL + "/assembly/get-all"
+
+	autoparts_assembly = baseURL + "/autoparts_assembly"
+
+	user = baseURL + "/user"
 )
 
 type Handler struct {
@@ -40,6 +44,7 @@ func NewHandler(l *logrus.Logger, r *repo.Repository, m *minio.Client) *Handler 
 }
 
 func (h *Handler) RegisterHandler(router *gin.Engine) {
+
 	router.GET(autopartsList, h.AutopartsList)
 	router.GET(autopartsID, h.AutopartById)
 
@@ -52,6 +57,7 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 
 	router.DELETE(autoparts, h.DeleteAutopart)
 	//=============================================//
+
 	router.GET(assemblyList, h.AssembliesList)
 	router.GET(assemblyID, h.AssemblyById)
 
@@ -61,7 +67,16 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 	router.PUT(assemblyReject, h.RejectAssembly)
 
 	router.DELETE(assembly, h.DeleteAssembly)
+	//=============================================//
 
+	router.PUT(autoparts_assembly, h.UpdateCountAutopartAssembly)
+
+	router.DELETE(autoparts_assembly, h.DeleteFromAssembly)
+	//=============================================//
+
+	router.PUT(user, h.AddUser)
+
+	//=============================================//
 	registerStatic(router)
 }
 
