@@ -48,9 +48,9 @@ type AssemblyDetails struct {
 	Autoparts *[]Autopart
 }
 
-type AutopartDetails struct {
-	Autopart_id   int    `json:"autopart_id"`
-	Autopart_name string `json:"name"`
+type AutopartList struct {
+	DraftID   int         `json:"draft_id"`
+	Autoparts *[]Autopart `json:"autoparts_list"`
 }
 
 type AddToAssemblyID struct {
@@ -61,4 +61,9 @@ type AddToAssemblyID struct {
 type AssemblyForm struct {
 	Factory_id uint `json:"factory_id"`
 	User_id    uint `json:"user_id"`
+}
+
+type AutopartDetails struct {
+	Autopart_id   int    `json:"autopart_id"`
+	Autopart_name string `json:"name"`
 }

@@ -13,11 +13,11 @@ func (h *Handler) AddUser(ctx *gin.Context) {
 		return
 	}
 	if newUser.Login == "" {
-		h.errorHandler(ctx, http.StatusBadRequest, idCantBeEmpty)
+		h.errorHandler(ctx, http.StatusBadRequest, loginCantBeEmpty)
 		return
 	}
 	if newUser.Password == "" {
-		h.errorHandler(ctx, http.StatusBadRequest, autopartNameCannotBeEmpty)
+		h.errorHandler(ctx, http.StatusBadRequest, passwordCantBeEmpty)
 		return
 	}
 	if err := h.Repository.AddUser(&newUser); err != nil {
@@ -25,7 +25,7 @@ func (h *Handler) AddUser(ctx *gin.Context) {
 		return
 	}
 
-	h.successHandler(ctx, "user_created", gin.H{
+	h.successAddHandler(ctx, "user_created", gin.H{
 		"user_id":      newUser.ID,
 		"login":        newUser.Login,
 		"is_moderator": newUser.IsModerator,

@@ -16,7 +16,7 @@ var (
 
 func (r *Repository) AssembliesList(status, start, end string) (*[]ds.Assembly, error) {
 	var assemblies []ds.Assembly
-	query := r.db.Where("status != ?", utils.DeletedString)
+	query := r.db.Where("status != ? AND status != ?", utils.DeletedString, utils.DraftString)
 
 	if status != "" {
 		query = query.Where("status = ?", status)

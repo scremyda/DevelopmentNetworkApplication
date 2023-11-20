@@ -9,7 +9,8 @@ import (
 	"time"
 )
 
-func (r *Repository) AutopartsList(brand string) (*[]ds.Autopart, error) {
+func (r *Repository) AutopartsList(brand string) (*ds.AutopartList, error) {
+	var autopartList ds.AutopartList
 	var autoparts []ds.Autopart
 	var result *gorm.DB
 	if brand == "" {
@@ -17,7 +18,11 @@ func (r *Repository) AutopartsList(brand string) (*[]ds.Autopart, error) {
 	} else {
 		result = r.db.Where("status = ? AND brand = ?", false, brand).Find(&autoparts)
 	}
-	return &autoparts, result.Error
+	autopartList.Autoparts = &autoparts
+	var assembly ds.Assembly
+	result = r.db.Where("status = ?", utils.DraftString).Find(&assembly)
+	autopartList.DraftID = int(assembly.ID)
+	return &autopartList, result.Error
 }
 
 func (r *Repository) AutopartById(id uint) (*ds.Autopart, error) {

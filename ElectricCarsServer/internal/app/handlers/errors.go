@@ -7,15 +7,16 @@ var (
 	idMustBeEmpty = errors.New("param `id` must be empty")
 
 	idCantBeEmpty               = errors.New("param `user_id` cant be empty or less 0")
-	autopartNameCannotBeEmpty   = errors.New("autopart name cannot be empty or less 0")
-	autopartBrandCannotBeEmpty  = errors.New("autopart name cannot be empty or less 0")
-	autopartModelsCannotBeEmpty = errors.New("autopart name cannot be empty or less 0")
-	autopartYearCannotBeEmpty   = errors.New("autopart name cannot be empty or less 0")
-	autopartPriceCannotBeEmpty  = errors.New("autopart name cannot be empty or less 0")
+	autopartNameCannotBeEmpty   = errors.New("autopart name cannot be empty")
+	autopartBrandCannotBeEmpty  = errors.New("autopart brand cannot be empty")
+	autopartModelsCannotBeEmpty = errors.New("autopart model cannot be empty")
+	autopartYearCannotBeEmpty   = errors.New("autopart year cannot be empty")
+	autopartPriceCannotBeEmpty  = errors.New("autopart price cannot be empty")
 
-	headerNotFound            = errors.New("no file uploaded")
-	destinationOrCityIsEmpty  = errors.New("destination or city cannot be empty")
-	serialNumberCannotBeEmpty = errors.New("param `serial_number` cannot be empty")
+	loginCantBeEmpty    = errors.New("param `login` cant be empty")
+	passwordCantBeEmpty = errors.New("param `password` cant be empty")
+
+	headerNotFound = errors.New("no file uploaded")
 
 	userIsNotModerator = errors.New("user is not moderator")
 

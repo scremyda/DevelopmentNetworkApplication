@@ -175,7 +175,7 @@ func (h *Handler) UpdateAutopart(ctx *gin.Context) {
 	})
 }
 
-func (h *Handler) AddToAssembly(ctx *gin.Context) { // TODO: Создавать новую Assembly только если такой записи нет
+func (h *Handler) AddToAssembly(ctx *gin.Context) {
 	var AddToAssemblyID ds.AddToAssemblyID
 	err := ctx.BindJSON(&AddToAssemblyID)
 	if err != nil {
