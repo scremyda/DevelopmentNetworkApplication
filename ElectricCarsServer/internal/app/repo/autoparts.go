@@ -16,7 +16,7 @@ func (r *Repository) AutopartsList(brand string) (*ds.AutopartList, error) {
 	if brand == "" {
 		result = r.db.Where("status = ?", false).Find(&autoparts)
 	} else {
-		result = r.db.Where("status = ? AND brand = ?", false, brand).Find(&autoparts)
+		result = r.db.Where("status = ? AND name LIKE ?", false, "%"+brand+"%").Find(&autoparts)
 	}
 	autopartList.Autoparts = &autoparts
 	var assembly ds.Assembly
@@ -49,10 +49,8 @@ func (r *Repository) DeleteAutopart(id uint) error {
 	if autopart.ID == 0 {
 		return fmt.Errorf("autopart not found")
 	}
-	err := r.deleteImageFromMinio(autopart.Image)
-	if err != nil {
-		return err
-	}
+	_ = r.deleteImageFromMinio(autopart.Image)
+
 	autopart.Status = true
 	result := r.db.Save(&autopart)
 	return result.Error

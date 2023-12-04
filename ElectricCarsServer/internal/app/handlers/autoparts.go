@@ -10,7 +10,7 @@ import (
 )
 
 func (h *Handler) AutopartsList(ctx *gin.Context) {
-	queryBrand, _ := ctx.GetQuery("brand")
+	queryBrand, _ := ctx.GetQuery("name")
 
 	autoparts, err := h.Repository.AutopartsList(queryBrand)
 	if err != nil {
@@ -47,14 +47,17 @@ func (h *Handler) AutopartById(ctx *gin.Context) {
 }
 
 func (h *Handler) DeleteAutopart(ctx *gin.Context) {
-	var request struct {
-		ID int `json:"id"`
-	}
-	if err := ctx.BindJSON(&request); err != nil {
+	idStr := ctx.Param("id")
+	if idStr == "" {
+		err := errors.New("error no get param")
 		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return
 	}
-	id := request.ID
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
 	if id == 0 {
 		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
 		return

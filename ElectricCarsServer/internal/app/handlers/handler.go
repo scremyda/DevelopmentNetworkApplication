@@ -55,7 +55,7 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 	router.PUT(autoparts, h.UpdateAutopart)
 	router.PUT(addAutopartImage, h.AddImage)
 
-	router.DELETE(autoparts, h.DeleteAutopart)
+	router.DELETE(autopartsID, h.DeleteAutopart)
 	//=============================================//
 
 	router.GET(assemblyList, h.AssembliesList)

@@ -16,6 +16,9 @@ func main() {
 	logger := logrus.New()
 	minioClient := Minio.NewMinioClient(logger)
 	router := gin.Default()
+
+	router.Use(corsMiddleware())
+
 	conf, err := config.NewConfig(logger)
 	if err != nil {
 		logger.Fatalf("Error with configuration reading: %s", err)
@@ -32,4 +35,20 @@ func main() {
 	hand := handlers.NewHandler(logger, rep, minioClient)
 	application := pkg.NewApp(conf, router, logger, hand)
 	application.RunApp()
+}
+
+func corsMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
 }
