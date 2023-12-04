@@ -38,24 +38,24 @@ func main() {
 
 	autoparts := []ds.Autopart{
 		{Name: "Двигатель Tesla Model 3", Description: "Двигатель Tesla Model 3, 7651488", Brand: "Tesla",
-			Models: "Tesla Model 3", Year: 2019, Image: "image1.jpg", IsDelete: false, UserID: 1, Status: "Available", Price: 275000},
+			Models: "Tesla Model 3", Year: 2019, Image: "image1.jpg", UserID: 1, Status: "Available", Price: 275000},
 
 		{Name: "Двигатель Tesla Model Y", Description: "Задний мотор, ротор(якорь) мотора, Tesla Model 3, Y, 439210", Brand: "Tesla",
-			Models: "Tesla Model Y", Year: 2020, Image: "image2.jpg", IsDelete: false, UserID: 2, Status: "Available", Price: 45457},
+			Models: "Tesla Model Y", Year: 2020, Image: "image2.jpg", UserID: 2, Status: "Available", Price: 45457},
 
 		{Name: "Задний мотор и стартор Tesla Model S", Description: "Задний мотор, статор и ротор (якорь), Tesla Model S, Y, 112098000C", Brand: "Tesla",
-			Models: "Tesla Model 3", Year: 2020, Image: "image3.jpg", IsDelete: false, UserID: 3, Status: "Available", Price: 50700},
+			Models: "Tesla Model 3", Year: 2020, Image: "image3.jpg", UserID: 3, Status: "Available", Price: 50700},
 	}
 	assemblies := []ds.Assembly{
-		{DateStart: time.Now(), DateEnd: time.Now().Add(24 * time.Hour), Status: "Pending", Name: "Завод по сборке в Москве", ImageURL: "factory1.jpg", Description: "Завод по сборке в Москве"},
-		{DateStart: time.Now(), DateEnd: time.Now().Add(24 * time.Hour), Status: "Pending", Name: "Завод по сборке в Саратове", ImageURL: "factory2.jpg", Description: "Завод по сборке в Саратове"},
-		{DateStart: time.Now(), DateEnd: time.Now().Add(24 * time.Hour), Status: "Pending", Name: "Завод по сборке в Владивостоке", ImageURL: "factory3.jpg", Description: "Завод по сборке в Владивостоке"},
+		{DateStart: time.Now(), DateEnd: time.Time{}, DateStartOfProcessing: time.Time{}, Status: "Pending", Name: "Завод по сборке в Москве", Description: "Завод по сборке в Москве"},
+		{DateStart: time.Now(), DateEnd: time.Time{}, DateStartOfProcessing: time.Time{}, Status: "Pending", Name: "Завод по сборке в Саратове", Description: "Завод по сборке в Саратове"},
+		{DateStart: time.Now(), DateEnd: time.Time{}, DateStartOfProcessing: time.Time{}, Status: "Pending", Name: "Завод по сборке в Владивостоке", Description: "Завод по сборке в Владивостоке"},
 	}
 
 	autopartAssemblies := []ds.Autopart_Assembly{
-		{AssemblyID: 1, AutopartID: 1, Cash: 120999},
-		{AssemblyID: 2, AutopartID: 2, Cash: 278999},
-		{AssemblyID: 3, AutopartID: 3, Cash: 57999},
+		{AssemblyID: 1, AutopartID: 1, Count: 1},
+		{AssemblyID: 2, AutopartID: 2, Count: 2},
+		{AssemblyID: 3, AutopartID: 3, Count: 1},
 	}
 
 	db.Create(&users)

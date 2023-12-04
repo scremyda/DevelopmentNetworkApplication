@@ -8,7 +8,7 @@ import (
 func (h *Handler) AutopartsList(ctx *gin.Context) {
 	searchQuery := ctx.Query("search")
 	if searchQuery == "" {
-		autoparts, err := h.Repository.AutopartsList()
+		autoparts, err := h.Repository.Searchautopart(searchQuery)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{
 				"error": err.Error(),
@@ -19,7 +19,6 @@ func (h *Handler) AutopartsList(ctx *gin.Context) {
 			"Autoparts": autoparts,
 		})
 	} else {
-
 		filteredautoparts, err := h.Repository.Searchautopart(searchQuery)
 		if err != nil {
 

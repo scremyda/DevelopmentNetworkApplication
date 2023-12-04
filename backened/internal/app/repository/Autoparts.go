@@ -6,14 +6,12 @@ import (
 	"strings"
 )
 
-func (r *Repository) AutopartsList() (*[]ds.Autopart, error) {
-	var autoparts []ds.Autopart
-	r.db.Where("is_delete = ?", false).Find(&autoparts)
-	return &autoparts, nil
-}
-
 func (r *Repository) Searchautopart(search string) (*[]ds.Autopart, error) {
 	var autoparts []ds.Autopart
+	if search == "" {
+		r.db.Where("Status = ?", "Available").Find(&autoparts)
+		return &autoparts, nil
+	}
 	r.db.Find(&autoparts)
 
 	var filteredautoparts []ds.Autopart
@@ -34,6 +32,6 @@ func (r *Repository) AutopartById(id string) (*ds.Autopart, error) {
 }
 
 func (r *Repository) Deleteautopart(id string) {
-	query := "UPDATE autoparts SET is_delete = true WHERE id = $1"
+	query := "UPDATE autoparts SET Status = 'Deleted' WHERE id = $1"
 	r.db.Exec(query, id)
 }

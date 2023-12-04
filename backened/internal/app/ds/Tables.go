@@ -57,17 +57,16 @@ type Users struct {
 }
 type Autopart struct {
 	gorm.Model
-	Name        string `gorm:"type:varchar(255)" json:"name"`
-	Description string `gorm:"type:text" json:"description"`
-	Brand       string `gorm:"not null" json:"brand"`
-	Models      string `gorm:"not null" json:"model"`
-	Year        int    `gorm:"not null" json:"year"`
-	Image       string `gorm:"type:varchar(255)" json:"image"`
-	IsDelete    bool   `json:"is_delete"`
-	UserID      uint   `json:"-"`
-	User        Users  `gorm:"foreignKey:UserID" json:"-"`
-	Status      string `gorm:"type:varchar(255)" json:"status"`
-	Price       uint   `gorm:"not null" json:"price"`
+	Name        string  `gorm:"type:varchar(255)" json:"name"`
+	Description string  `gorm:"type:text" json:"description"`
+	Brand       string  `gorm:"not null" json:"brand"`
+	Models      string  `gorm:"not null" json:"model"`
+	Year        int     `gorm:"not null" json:"year"`
+	Image       string  `gorm:"type:varchar(255)" json:"image"`
+	UserID      uint    `json:"user_id"`
+	User        Users   `gorm:"foreignKey:UserID" json:"-"`
+	Status      string  `gorm:"type:varchar(255)" json:"status"`
+	Price       float64 `gorm:"not null" json:"price"`
 }
 type Autopart_Assembly struct {
 	gorm.Model
@@ -75,15 +74,16 @@ type Autopart_Assembly struct {
 	AutopartID      uint     `json:"-"`
 	AssemblyRequest Assembly `gorm:"foreignKey:AssemblyID" json:"-"`
 	Autopart        Autopart `gorm:"foreignKey:AutopartID" json:"-"`
-	Cash            uint     `gorm:"not null" json:"cash"`
+	Count           int      `json:"count"`
 }
 
 type Assembly struct {
 	gorm.Model
-	DateStart   time.Time `json:"date_start"`
-	DateEnd     time.Time `json:"date_end"`
-	Status      string    `gorm:"type:varchar(255)" json:"status"`
-	Name        string    `gorm:"type:varchar(255)" json:"factory"`
-	ImageURL    string    `gorm:"type:varchar(255)" json:"image"`
-	Description string    `gorm:"type:varchar(255)" json:"description"`
+	DateStart             time.Time `json:"date_start"`
+	DateEnd               time.Time `json:"date_end"`
+	DateStartOfProcessing time.Time `json:"date_processing"`
+	Status                string    `gorm:"type:varchar(255)" json:"status"`
+	Name                  string    `gorm:"type:varchar(255)" json:"factory"`
+	Creator               uint      `gorm:"type:varchar(255)" json:"creator_id"`
+	Description           string    `gorm:"type:varchar(255)" json:"description"`
 }
