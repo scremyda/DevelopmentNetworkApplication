@@ -2,6 +2,7 @@ package repo
 
 import (
 	"ElectricCarsServer/ElectricCarsServer/internal/app/ds"
+	"context"
 	"fmt"
 	"github.com/jackc/pgx/v5/pgconn"
 )
@@ -27,4 +28,13 @@ func isDuplicateKeyError(err error) bool {
 		return true
 	}
 	return false
+}
+
+func (r *Repository) SignUp(ctx context.Context, newUser ds.Users) error {
+	return r.db.Create(&newUser).Error
+}
+
+func (r *Repository) GetByCredentials(ctx context.Context, user ds.Users) (ds.Users, error) {
+	err := r.db.First(&user, "login = ? AND password = ?", user.Login, user.Password).Error
+	return user, err
 }

@@ -6,10 +6,14 @@ import (
 	"ElectricCarsServer/ElectricCarsServer/internal/app/dsn"
 	"ElectricCarsServer/ElectricCarsServer/internal/app/handlers"
 	"ElectricCarsServer/ElectricCarsServer/internal/app/pkg"
+	"ElectricCarsServer/ElectricCarsServer/internal/app/pkg/auth"
+	"ElectricCarsServer/ElectricCarsServer/internal/app/redis"
 	"ElectricCarsServer/ElectricCarsServer/internal/app/repo"
+	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+	"os"
 )
 
 func main() {
@@ -23,6 +27,13 @@ func main() {
 	if err != nil {
 		logger.Fatalf("Error with configuration reading: %s", err)
 	}
+
+	ctx := context.Background()
+	redisClient, errRedis := redis.New(ctx, conf.Redis)
+	if errRedis != nil {
+		logger.Fatalf("Errof with redis connect: %s", err)
+	}
+
 	postgresString, errPost := dsn.FromEnv()
 	if errPost != nil {
 		logger.Fatalf("Error of reading postgres line: %s", errPost)
@@ -32,7 +43,12 @@ func main() {
 	if errRep != nil {
 		logger.Fatalf("Error from repository: %s", err)
 	}
-	hand := handlers.NewHandler(logger, rep, minioClient)
+
+	tokenManager, err := auth.NewManager(os.Getenv("TOKEN_SECRET"))
+	if err != nil {
+		logger.Fatalln(err)
+	}
+	hand := handlers.NewHandler(logger, rep, minioClient, conf, redisClient, tokenManager)
 	application := pkg.NewApp(conf, router, logger, hand)
 	application.RunApp()
 }

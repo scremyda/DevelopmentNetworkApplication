@@ -1,11 +1,16 @@
 package handlers
 
 import (
+	"ElectricCarsServer/ElectricCarsServer/internal/app/config"
+	"ElectricCarsServer/ElectricCarsServer/internal/app/pkg/auth"
+	"ElectricCarsServer/ElectricCarsServer/internal/app/pkg/hash"
+	"ElectricCarsServer/ElectricCarsServer/internal/app/redis"
 	"ElectricCarsServer/ElectricCarsServer/internal/app/repo"
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"os"
 )
 
 const (
@@ -30,16 +35,33 @@ const (
 )
 
 type Handler struct {
-	Logger     *logrus.Logger
-	Repository *repo.Repository
-	Minio      *minio.Client
+	Logger       *logrus.Logger
+	Repository   *repo.Repository
+	Minio        *minio.Client
+	Config       *config.Config
+	Redis        *redis.Client
+	TokenManager auth.TokenManager
+	Hasher       hash.PasswordHasher
 }
 
-func NewHandler(l *logrus.Logger, r *repo.Repository, m *minio.Client) *Handler {
+func NewHandler(
+	l *logrus.Logger,
+
+	r *repo.Repository,
+	m *minio.Client,
+	conf *config.Config,
+	red *redis.Client,
+
+	tokenManager auth.TokenManager,
+) *Handler {
 	return &Handler{
-		Logger:     l,
-		Repository: r,
-		Minio:      m,
+		Logger:       l,
+		Repository:   r,
+		Minio:        m,
+		Config:       conf,
+		Redis:        red,
+		TokenManager: tokenManager,
+		Hasher:       hash.NewSHA256Hasher(os.Getenv("SALT")),
 	}
 }
 
@@ -75,6 +97,10 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 	//=============================================//
 
 	router.PUT(user, h.AddUser)
+	// авторизация и регистрация
+	router.POST(user+"/signIn", h.SignIn)
+	router.POST(user+"/signUp", h.SignUp)
+	router.POST(user+"/logout", h.Logout)
 
 	//=============================================//
 	registerStatic(router)

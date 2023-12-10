@@ -1,12 +1,15 @@
 package ds
 
 import (
+	"errors"
+	"github.com/golang-jwt/jwt"
 	"time"
 )
 
 type Users struct {
 	ID          uint   `gorm:"primary_key" json:"user_id"`
 	Login       string `gorm:"type:varchar(255);unique" json:"login"`
+	Name        string `json:"name"`
 	Password    string `gorm:"type:varchar(255)" json:"password"`
 	IsModerator bool   `json:"is_moderator"`
 }
@@ -66,4 +69,33 @@ type AssemblyForm struct {
 type AutopartDetails struct {
 	Autopart_id   int    `json:"autopart_id"`
 	Autopart_name string `json:"name"`
+}
+
+type JwtClaims struct {
+	jwt.StandardClaims
+	UserId  int  `json:"userId"`
+	IsAdmin bool `json:"isAdmin"`
+}
+
+type Role int
+
+const (
+	Client Role = iota // 0
+	Admin              // 1
+)
+
+var (
+	ErrClientAlreadyExists = errors.New("клиент с таким логином уже существует")
+	ErrUserNotFound        = errors.New("клиента с таким логином не существует")
+)
+
+type UserLogin struct {
+	Login    string `json:"login" binding:"required,max=64"`
+	Password string `json:"password" binding:"required,min=8,max=64"`
+}
+
+type UserSignUp struct {
+	Login    string `json:"login" binding:"required,max=64"`
+	Name     string `json:"name"`
+	Password string `json:"password" binding:"required,min=8,max=64"`
 }
