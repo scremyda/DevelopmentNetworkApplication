@@ -63,8 +63,7 @@ func (r *Repository) AddAutopart(autopart *ds.Autopart) error {
 
 func (r *Repository) AddToAssembly(autopartDetails *ds.AddToAssemblyID) error {
 	var autopart ds.Autopart
-	if err := r.db.Where("id = ? AND name = ?", autopartDetails.AutopartDetails.Autopart_id,
-		autopartDetails.AutopartDetails.Autopart_name).
+	if err := r.db.Where("id = ?", autopartDetails.AutopartDetails.Autopart_id).
 		First(&autopart).Error; err != nil {
 		return err
 	}

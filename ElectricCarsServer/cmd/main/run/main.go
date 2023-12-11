@@ -16,6 +16,13 @@ import (
 	"os"
 )
 
+// @title Autoparts App
+// @version 1.0
+// @description App for serving autoparts requests
+
+// @host localhost:8080
+// @schemes http
+// @BasePath /
 func main() {
 	logger := logrus.New()
 	minioClient := Minio.NewMinioClient(logger)

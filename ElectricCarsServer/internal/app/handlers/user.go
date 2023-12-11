@@ -45,12 +45,12 @@ func (h *Handler) AddUser(ctx *gin.Context) {
 // @Tags         Authentication
 // @Accept       json
 // @Produce      json
-// @Param        user  body  models.UserSignUp  true  "User information"
+// @Param        user  body  ds.UserSignUp  true  "User information"
 // @Success      201  {object}  map[string]any
 // @Failure      400  {object}  error
 // @Failure      409  {object}  error
 // @Failure      500  {object}  error
-// @Router       /signUp [post]
+// @Router       /api/user/signUp [post]
 func (h *Handler) SignUp(c *gin.Context) {
 	var newClient ds.UserSignUp
 	var err error
@@ -84,12 +84,12 @@ func (h *Handler) SignUp(c *gin.Context) {
 // @Tags         Authentication
 // @Accept       json
 // @Produce      json
-// @Param        user  body  models.UserLogin  true  "User information"
+// @Param        user  body  ds.UserLogin  true  "User information"
 // @Success      200  {object}  map[string]any
 // @Failure      400  {object}  error
 // @Failure      401  {object}  error
 // @Failure      500  {object}  error
-// @Router       /signIn [post]
+// @Router       /api/user/signIn [post]
 func (h *Handler) SignIn(c *gin.Context) {
 	var clientInfo ds.UserLogin
 	var err error
@@ -121,7 +121,7 @@ func (h *Handler) SignIn(c *gin.Context) {
 		return
 	}
 
-	c.SetCookie("AccessToken", "Bearer "+token, 0, "/", "127.0.0.1", false, true)
+	c.SetCookie("AccessToken", "Bearer "+token, 0, "/", "127.0.0.1:8080", false, true)
 	c.JSON(http.StatusOK, gin.H{"message": "клиент успешно авторизован"})
 }
 
@@ -133,7 +133,7 @@ func (h *Handler) SignIn(c *gin.Context) {
 // @Produce      json
 // @Success      200
 // @Failure      400
-// @Router       /logout [post]
+// @Router       /api/user/logout [post]
 func (h *Handler) Logout(c *gin.Context) {
 	jwtStr, err := c.Cookie("AccessToken")
 	if !strings.HasPrefix(jwtStr, jwtPrefix) || err != nil { // если нет префикса то нас дурят!

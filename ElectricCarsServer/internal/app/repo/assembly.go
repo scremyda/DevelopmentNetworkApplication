@@ -34,7 +34,7 @@ func (r *Repository) AssembliesList(status, start, end string) (*[]ds.Assembly, 
 	return &assemblies, result.Error
 }
 
-func (r *Repository) AssemblyByID(id uint) (*[]ds.Autopart, *ds.Assembly, error) {
+func (r *Repository) AssemblyByID(id uint, userId int, isAdmin bool) (*[]ds.Autopart, *ds.Assembly, error) {
 	var autoparts []ds.Autopart
 	var assembly ds.Assembly
 
@@ -43,15 +43,19 @@ func (r *Repository) AssemblyByID(id uint) (*[]ds.Autopart, *ds.Assembly, error)
 	if result.Error != nil {
 		return nil, nil, result.Error
 	}
+	if !isAdmin && assembly.Creator == uint(userId) || isAdmin {
+		//ищем услуги в заявке
+		resultAutoparts := r.db.Preload(clause.Associations).
+			Joins("JOIN autopart_assemblies ON autopart_assemblies.autopart_id = autoparts.id").
+			Joins("JOIN assemblies ON autopart_assemblies.assembly_id = assemblies.id").
+			Where("assemblies.id = ?", id).
+			Find(&autoparts)
 
-	resultAutoparts := r.db.Preload(clause.Associations).
-		Joins("JOIN autopart_assemblies ON autopart_assemblies.autopart_id = autoparts.id").
-		Joins("JOIN assemblies ON autopart_assemblies.assembly_id = assemblies.id").
-		Where("assemblies.id = ?", id).
-		Find(&autoparts)
-
-	if resultAutoparts.Error != nil {
-		return nil, nil, resultAutoparts.Error
+		if resultAutoparts.Error != nil {
+			return nil, nil, resultAutoparts.Error
+		}
+	} else {
+		return nil, nil, errors.New("ошибка доступа к данной заявке")
 	}
 
 	return &autoparts, &assembly, nil

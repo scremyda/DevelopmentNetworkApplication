@@ -9,6 +9,16 @@ import (
 	"strconv"
 )
 
+// AutopartsList godoc
+// @Summary      Autoparts List
+// @Description  Autoparts List
+// @Tags         Autoparts
+// @Accept       json
+// @Produce      json
+// @Param       name query   string  false  "Query string to filter autoparts by name"
+// @Success      200        {object}  ds.AutopartList
+// @Failure      500          {object}  error
+// @Router       /api/autoparts/get-al [get]
 func (h *Handler) AutopartsList(ctx *gin.Context) {
 	queryBrand, _ := ctx.GetQuery("name")
 
@@ -25,6 +35,17 @@ func (h *Handler) AutopartsList(ctx *gin.Context) {
 	h.successHandler(ctx, "autoparts", autoparts)
 }
 
+// AutopartById godoc
+// @Summary      Autopart By ID
+// @Description  Autopart By ID
+// @Tags         Autoparts
+// @Accept       json
+// @Produce      json
+// @Param        id   path    int     true        "Autoaprt ID"
+// @Success      200        {object}  ds.Autopart
+// @Failure      400          {object}  error
+// @Failure      500          {object}  error
+// @Router       /api/autoparts{id} [get]
 func (h *Handler) AutopartById(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	if idStr == "" {
@@ -46,6 +67,17 @@ func (h *Handler) AutopartById(ctx *gin.Context) {
 	h.successHandler(ctx, "autopart", autoparts)
 }
 
+// DeleteAutopart godoc
+// @Summary      Delete Autopart by admin
+// @Description  Delete Autopart by admin
+// @Tags         Autoparts
+// @Accept       json
+// @Produce      json
+// @Param        id           path        int     true   "Autoaprt ID"
+// @Success      200
+// @Failure      400          {object}  error
+// @Failure      500          {object}  error
+// @Router       /api/autoparts{id} [delete]
 func (h *Handler) DeleteAutopart(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	if idStr == "" {
@@ -70,6 +102,18 @@ func (h *Handler) DeleteAutopart(ctx *gin.Context) {
 	h.successHandler(ctx, "deleted_id", id)
 }
 
+// AddImage godoc
+// @Summary      Add Image to autopart by admin
+// @Description  Add Image to autopart by admin
+// @Tags         Autoparts
+// @Accept       multipart/form-data
+// @Produce      json
+// @Param        id          formData    int     false       "autopart ID"
+// @Param        image       formData    file    false       "image"
+// @Success      200
+// @Failure      400         {object}    error
+// @Failure      500         {object}    error
+// @Router       /api/autoparts/upload-image [post]
 func (h *Handler) AddImage(ctx *gin.Context) {
 	file, header, err := ctx.Request.FormFile("file")
 	autopartID := ctx.Request.FormValue("autopart_id")
@@ -108,12 +152,25 @@ func (h *Handler) AddImage(ctx *gin.Context) {
 	h.successAddHandler(ctx, "image_url", newImageURL)
 }
 
+// AddAutopart godoc
+// @Summary      Add Autopart by admin
+// @Description  Add Autopart by admin
+// @Tags         Autoparts
+// @Accept       json
+// @Produce      json
+// @Param        input    body    ds.Autopart  true    "New autopart"
+// @Success      200
+// @Failure      400          {object}  error
+// @Router       /api/autoparts [post]
 func (h *Handler) AddAutopart(ctx *gin.Context) {
 	var newAutopart ds.Autopart
 	if err := ctx.BindJSON(&newAutopart); err != nil {
 		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return
 	}
+
+	newAutopart.UserID = uint(ctx.GetInt(userCtx))
+
 	if newAutopart.ID != 0 {
 		h.errorHandler(ctx, http.StatusBadRequest, idMustBeEmpty)
 		return
@@ -150,12 +207,25 @@ func (h *Handler) AddAutopart(ctx *gin.Context) {
 	h.successAddHandler(ctx, "autopart_id", newAutopart.ID)
 }
 
+// UpdateAutopart godoc
+// @Summary      Update Autopart by admin
+// @Description  Update Autopart by admin
+// @Tags         Autoparts
+// @Accept       json
+// @Produce      json
+// @Param        input    body    ds.Autopart  true    "updated autopart"
+// @Success      200          {object}  ds.Autopart
+// @Failure      400          {object}  error
+// @Router       /api/autoparts [put]
 func (h *Handler) UpdateAutopart(ctx *gin.Context) {
 	var updatedAutopart ds.Autopart
 	if err := ctx.BindJSON(&updatedAutopart); err != nil {
 		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return
 	}
+
+	updatedAutopart.UserID = uint(ctx.GetInt(userCtx))
+
 	if updatedAutopart.ID == 0 {
 		h.errorHandler(ctx, http.StatusBadRequest, idNotFound)
 		return
@@ -178,6 +248,16 @@ func (h *Handler) UpdateAutopart(ctx *gin.Context) {
 	})
 }
 
+// AddToAssembly godoc
+// @Summary      Add To Assembly by client
+// @Description  Add To Assembly by client
+// @Tags         Autoparts
+// @Accept       json
+// @Produce      json
+// @Param        input    body    ds.AddToAssemblyID  true    "Add To Assembly autopart"
+// @Success      200
+// @Failure      400          {object}  error
+// @Router       /api/autoparts/add-to-assembly [post]
 func (h *Handler) AddToAssembly(ctx *gin.Context) {
 	var AddToAssemblyID ds.AddToAssemblyID
 	err := ctx.BindJSON(&AddToAssemblyID)
@@ -186,8 +266,9 @@ func (h *Handler) AddToAssembly(ctx *gin.Context) {
 		return
 	}
 
-	if AddToAssemblyID.AutopartDetails.Autopart_name == "" || AddToAssemblyID.AutopartDetails.Autopart_id <= 0 ||
-		AddToAssemblyID.User_id <= 0 {
+	AddToAssemblyID.User_id = uint(ctx.GetInt(userCtx))
+
+	if AddToAssemblyID.AutopartDetails.Autopart_id <= 0 || AddToAssemblyID.User_id <= 0 {
 		err := errors.New("некорректные данные")
 		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return

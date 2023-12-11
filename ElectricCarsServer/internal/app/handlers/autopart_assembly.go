@@ -6,6 +6,17 @@ import (
 	"net/http"
 )
 
+// DeleteFromAssembly godoc
+// @Summary      Delete Autopart From Assembly by client
+// @Description  Delete Autopart From Assembly by client
+// @Tags         Autopart_Assembly
+// @Accept       json
+// @Produce      json
+// @Param        input    body    ds.Autopart_Assembly  true    "Delete Autopart From Assembly"
+// @Success      200          "deleted successfully"
+// @Failure      400          {object}  error
+// @Failure      500          {object}  error
+// @Router       /api/autoparts_assembly [delete]
 func (h *Handler) DeleteFromAssembly(ctx *gin.Context) {
 	var deleteFromAssembly ds.Autopart_Assembly
 	if err := ctx.BindJSON(&deleteFromAssembly); err != nil {
@@ -31,6 +42,17 @@ func (h *Handler) DeleteFromAssembly(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, "deleted successfully")
 }
 
+// UpdateCountAutopartAssembly godoc
+// @Summary      Update Count Autopart Assembly by v
+// @Description  Update Count Autopart Assembly by client
+// @Tags         Autopart_Assembly
+// @Accept       json
+// @Produce      json
+// @Param        input    body    ds.Autopart_Assembly  true    "Delete Autopart From Assembly"
+// @Success      200         {object} ds.Autopart_Assembly "updated successfully"
+// @Failure      400          {object}  error
+// @Failure      500          {object}  error
+// @Router       /api/autoparts_assembly [put]
 func (h *Handler) UpdateCountAutopartAssembly(ctx *gin.Context) {
 	var updatedAutopartAssembly ds.Autopart_Assembly
 	if err := ctx.BindJSON(&updatedAutopartAssembly); err != nil {

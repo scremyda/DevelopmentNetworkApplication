@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	_ "ElectricCarsServer/ElectricCarsServer/docs"
 	"ElectricCarsServer/ElectricCarsServer/internal/app/config"
+	models "ElectricCarsServer/ElectricCarsServer/internal/app/ds"
 	"ElectricCarsServer/ElectricCarsServer/internal/app/pkg/auth"
 	"ElectricCarsServer/ElectricCarsServer/internal/app/pkg/hash"
 	"ElectricCarsServer/ElectricCarsServer/internal/app/redis"
@@ -9,6 +11,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go"
 	"github.com/sirupsen/logrus"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
 	"os"
 )
@@ -67,28 +71,33 @@ func NewHandler(
 
 func (h *Handler) RegisterHandler(router *gin.Engine) {
 
+	router.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	router.GET(autopartsList, h.AutopartsList)
 	router.GET(autopartsID, h.AutopartById)
 
-	router.POST(autoparts, h.AddAutopart)
-	router.POST(addAutopartImage, h.AddImage)
-	router.POST(addAssembly, h.AddToAssembly)
+	router.POST(autoparts, h.WithAuthCheck([]models.Role{models.Admin}), h.AddAutopart)
+	router.POST(addAutopartImage, h.WithAuthCheck([]models.Role{models.Admin}), h.AddImage)
+	router.POST(addAssembly, h.WithAuthCheck([]models.Role{models.Client}), h.AddToAssembly)
 
-	router.PUT(autoparts, h.UpdateAutopart)
-	router.PUT(addAutopartImage, h.AddImage)
+	router.PUT(autoparts, h.WithAuthCheck([]models.Role{models.Admin}), h.UpdateAutopart)
 
-	router.DELETE(autopartsID, h.DeleteAutopart)
+	router.DELETE(autopartsID, h.WithAuthCheck([]models.Role{models.Admin}), h.DeleteAutopart)
 	//=============================================//
 
-	router.GET(assemblyList, h.AssembliesList)
-	router.GET(assemblyID, h.AssemblyById)
+	router.GET(assemblyList, h.WithAuthCheck([]models.Role{models.Admin, models.Client}), h.AssembliesList)
 
-	router.PUT(assembly, h.UpdateAssembly)
-	router.PUT(assemblyForm, h.FormAssembly)
-	router.PUT(assemblyComplete, h.CompleteAssembly)
-	router.PUT(assemblyReject, h.RejectAssembly)
+	// разный доступ, у админа к любой, у юзера только к своей
+	router.GET(assemblyID, h.WithAuthCheck([]models.Role{models.Client, models.Admin}), h.AssemblyById)
 
-	router.DELETE(assembly, h.DeleteAssembly)
+	router.PUT(assembly, h.WithAuthCheck([]models.Role{models.Admin}), h.UpdateAssembly)
+
+	// статусы
+	router.PUT(assemblyForm, h.WithAuthCheck([]models.Role{models.Client}), h.FormAssembly)
+	router.PUT(assemblyComplete, h.WithAuthCheck([]models.Role{models.Admin}), h.CompleteAssembly)
+	router.PUT(assemblyReject, h.WithAuthCheck([]models.Role{models.Admin}), h.RejectAssembly)
+
+	router.DELETE(assembly, h.WithAuthCheck([]models.Role{models.Client}), h.DeleteAssembly)
 	//=============================================//
 
 	router.PUT(autoparts_assembly, h.UpdateCountAutopartAssembly)
