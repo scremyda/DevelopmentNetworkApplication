@@ -46,6 +46,11 @@ type Assembly struct {
 	Description           string    `gorm:"type:text" json:"description"`
 }
 
+type AssemblyAdmin struct {
+	Assembly   Assembly
+	AdminLogin string `json:"admin_login"`
+}
+
 type AssemblyDetails struct {
 	Assembly  *Assembly
 	Autoparts *[]Autopart

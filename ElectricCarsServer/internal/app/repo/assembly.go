@@ -5,6 +5,7 @@ import (
 	"ElectricCarsServer/ElectricCarsServer/internal/app/utils"
 	"errors"
 	"gorm.io/gorm/clause"
+	"strconv"
 	"time"
 )
 
@@ -14,9 +15,13 @@ var (
 	UserNotFound     = errors.New("user not found")
 )
 
-func (r *Repository) AssembliesList(status, start, end string) (*[]ds.Assembly, error) {
+func (r *Repository) AssembliesList(status, start, end string, userId int, isAdmin bool) (*[]ds.Assembly, error) {
 	var assemblies []ds.Assembly
-	query := r.db.Where("status != ? AND status != ?", utils.DeletedString, utils.DraftString)
+	ending := "AND creator = " + strconv.Itoa(userId)
+	if isAdmin {
+		ending = ""
+	}
+	query := r.db.Where("status != ? AND status != ?"+ending, utils.DeletedString, utils.DraftString)
 
 	if status != "" {
 		query = query.Where("status = ?", status)

@@ -28,7 +28,7 @@ func (h *Handler) AssembliesList(ctx *gin.Context) {
 
 	queryEnd, _ := ctx.GetQuery("end")
 
-	assemblies, err := h.Repository.AssembliesList(queryStatus, queryStart, queryEnd)
+	assemblies, err := h.Repository.AssembliesList(queryStatus, queryStart, queryEnd, ctx.GetInt(userCtx), ctx.GetBool(adminCtx))
 
 	if err != nil {
 		h.errorHandler(ctx, http.StatusBadRequest, err)
@@ -209,8 +209,12 @@ func (h *Handler) CompleteAssembly(ctx *gin.Context) {
 		h.errorHandler(ctx, http.StatusInternalServerError, err)
 		return
 	}
+	result := ds.AssemblyAdmin{
+		Assembly:   updatedAssembly,
+		AdminLogin: "Admin",
+	}
 
-	h.successHandler(ctx, "completed_assembly", updatedAssembly)
+	h.successHandler(ctx, "completed_assembly", result)
 }
 
 // RejectAssembly godoc
