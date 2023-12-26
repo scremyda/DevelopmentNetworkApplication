@@ -36,14 +36,15 @@ type Autopart_Assembly struct {
 }
 
 type Assembly struct {
-	ID                    uint      `gorm:"primary_key" json:"factory_id"`
-	DateStart             time.Time `json:"date_start"`
-	DateEnd               time.Time `json:"date_end"`
-	DateStartOfProcessing time.Time `json:"date_processing"`
-	Status                string    `gorm:"type:text" json:"status"`
-	Name                  string    `gorm:"type:text" json:"factory"`
-	Creator               uint      `json:"creator_id"`
-	Description           string    `gorm:"type:text" json:"description"`
+	ID                     uint      `gorm:"primary_key" json:"factory_id"`
+	DateStart              time.Time `json:"date_start"`
+	DateEnd                time.Time `json:"date_end"`
+	DateStartOfProcessing  time.Time `json:"date_processing"`
+	Status                 string    `gorm:"type:text" json:"status"`
+	Name                   string    `gorm:"type:text" json:"factory"`
+	Creator                uint      `json:"creator_id"`
+	Description            string    `gorm:"type:text" json:"description"`
+	DiscussionWithSupplier string    `gorm:"type:text" json:"discussion"`
 }
 
 type AssemblyAdmin struct {
@@ -103,4 +104,10 @@ type UserSignUp struct {
 	Login    string `json:"login" binding:"required,max=64"`
 	Name     string `json:"name"`
 	Password string `json:"password" binding:"required,min=4,max=64"`
+}
+
+type RequestAsyncService struct {
+	AssemblyID             int    `json:"assemblyId"`
+	DiscussionWithSupplier string `json:"discussion"`
+	Token                  string `json:"Server-Token"`
 }

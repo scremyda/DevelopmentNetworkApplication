@@ -15,6 +15,19 @@ var (
 	UserNotFound     = errors.New("user not found")
 )
 
+func (r *Repository) SaveAssemblyDiscussion(assemblyAsync ds.RequestAsyncService) error {
+	var request ds.Assembly
+	err := r.db.First(&request, "id = ? AND status != ? AND status != ?", assemblyAsync.AssemblyID,
+		utils.DeletedString, utils.DraftString)
+	if err.Error != nil {
+		r.logger.Error("error while getting assembly async")
+		return err.Error
+	}
+	request.DiscussionWithSupplier = assemblyAsync.DiscussionWithSupplier
+	res := r.db.Save(&request)
+	return res.Error
+}
+
 func (r *Repository) AssembliesList(status, start, end string, userId int, isAdmin bool) (*[]ds.Assembly, error) {
 	var assemblies []ds.Assembly
 	ending := "AND creator = " + strconv.Itoa(userId)

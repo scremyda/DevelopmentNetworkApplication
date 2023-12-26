@@ -3,11 +3,77 @@ package handlers
 import (
 	"ElectricCarsServer/ElectricCarsServer/internal/app/ds"
 	"ElectricCarsServer/ElectricCarsServer/internal/app/repo"
+	"bytes"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"strconv"
 )
+
+const (
+	ServerToken = "qwerzxfsdfoiw"
+	ServiceUrl  = "http://127.0.0.1:8081/discussion/"
+)
+
+func (h *Handler) AssemblyDiscussionStart(c *gin.Context) {
+	// принимает заявку и отправляет её в сервис
+	var request ds.RequestAsyncService
+	if err := c.BindJSON(&request); err != nil {
+		c.AbortWithError(http.StatusBadRequest, errors.New("неверный формат"))
+		return
+	}
+
+	request.Token = ServerToken
+
+	body, _ := json.Marshal(request)
+
+	client := &http.Client{}
+	req, err := http.NewRequest("PUT", ServiceUrl, bytes.NewBuffer(body))
+	if err != nil {
+		fmt.Println("Error creating request:", err)
+		return
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println("Error sending request:", err)
+		return
+	}
+
+	if resp.StatusCode == 200 {
+		c.JSON(http.StatusOK, gin.H{"message": "заявка принята в обработку"})
+		return
+	}
+	c.AbortWithError(http.StatusInternalServerError, errors.New("заявка не принята в обработку"))
+}
+
+// ручка вызывается сервисом на python
+func (h *Handler) AssemblyDiscussionFinish(c *gin.Context) {
+	var request ds.RequestAsyncService
+	if err := c.BindJSON(&request); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		log.Println(err)
+		return
+	}
+
+	if request.Token != ServerToken {
+		c.AbortWithError(http.StatusForbidden, errors.New("неверный токен"))
+		return
+	}
+
+	// сохраняем в базу
+	err := h.Repository.SaveAssemblyDiscussion(request)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "данные сохранены"})
+}
 
 // AssembliesList godoc
 // @Summary      Assembly List

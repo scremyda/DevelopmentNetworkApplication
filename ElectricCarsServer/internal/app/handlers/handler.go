@@ -26,12 +26,13 @@ const (
 	addAutopartImage = baseURL + "/autoparts/upload-image"
 	addAssembly      = baseURL + "/autoparts/add-to-assembly"
 
-	assembly         = baseURL + "/assembly"
-	assemblyForm     = baseURL + "/assembly/form"
-	assemblyComplete = baseURL + "/assembly/complete"
-	assemblyReject   = baseURL + "/assembly/reject"
-	assemblyID       = baseURL + "/assembly/:id"
-	assemblyList     = baseURL + "/assembly/get-all"
+	assembly           = baseURL + "/assembly"
+	assemblyForm       = baseURL + "/assembly/form"
+	assemblyComplete   = baseURL + "/assembly/complete"
+	assemblyReject     = baseURL + "/assembly/reject"
+	assemblyID         = baseURL + "/assembly/:id"
+	assemblyList       = baseURL + "/assembly/get-all"
+	assemblyDiscussion = baseURL + "/assembly/discussion"
 
 	autoparts_assembly = baseURL + "/autoparts_assembly"
 
@@ -110,6 +111,10 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 	router.POST(user+"/signIn", h.SignIn)
 	router.POST(user+"/signUp", h.SignUp)
 	router.POST(user+"/logout", h.Logout)
+
+	// асинхронный сервис
+	router.PUT(assemblyDiscussion+"/start", h.WithAuthCheck([]models.Role{models.Admin}), h.AssemblyDiscussionStart) // обращение к асинхронному сервису
+	router.PUT(assemblyDiscussion+"/finish", h.AssemblyDiscussionFinish)                                             // обращение к асинхронному сервису
 
 	//=============================================//
 	registerStatic(router)
