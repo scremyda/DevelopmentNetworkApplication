@@ -44,6 +44,8 @@ type Assembly struct {
 	Name                   string    `gorm:"type:text" json:"factory"`
 	Creator                uint      `json:"creator_id"`
 	Description            string    `gorm:"type:text" json:"description"`
+	CreatorLogin           string    `json:"creator_login"`
+	AdminLogin             string    `json:"admin_login"`
 	DiscussionWithSupplier string    `gorm:"type:text" json:"discussion"`
 }
 
