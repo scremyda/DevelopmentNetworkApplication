@@ -29,9 +29,9 @@ func main() {
 	users := []ds.Users{
 		{Login: "user1", Password: "password1", IsModerator: true},
 		{Login: "user2", Password: "password2", IsModerator: false},
-		{Login: "user3", Password: "password3", IsModerator: false},
-		//{Login: "user4", Password: "password4", IsModerator: false},
-		//{Login: "user5", Password: "password5", IsModerator: false},
+		//	{Login: "user3", Password: "password3", IsModerator: false},
+		//	//{Login: "user4", Password: "password4", IsModerator: false},
+		//	//{Login: "user5", Password: "password5", IsModerator: false},
 	}
 	db.Create(&users)
 }

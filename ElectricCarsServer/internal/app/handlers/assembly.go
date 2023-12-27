@@ -149,7 +149,7 @@ func (h *Handler) FormAssembly(ctx *gin.Context) {
 	h.successHandler(ctx, "formed_assembly", updatedAssembly)
 }
 
-func (h *Handler) CompleteAssembly(ctx *gin.Context) {
+func (h *Handler) CompleteRejectAssembly(ctx *gin.Context) {
 	var formAssembly ds.AssemblyForm
 	if err := ctx.BindJSON(&formAssembly); err != nil {
 		h.errorHandler(ctx, http.StatusBadRequest, err)
@@ -180,13 +180,13 @@ func (h *Handler) CompleteAssembly(ctx *gin.Context) {
 		return
 	}
 
-	updatedAssembly, err := h.Repository.CompleteAssembly(formAssembly)
+	updatedAssembly, err := h.Repository.CompleteRejectAssembly(formAssembly)
 	if err != nil {
 		h.errorHandler(ctx, http.StatusInternalServerError, err)
 		return
 	}
 
-	h.successHandler(ctx, "completed_assembly", updatedAssembly)
+	h.successHandler(ctx, "completed/rejected_assembly", updatedAssembly)
 }
 
 func (h *Handler) RejectAssembly(ctx *gin.Context) {

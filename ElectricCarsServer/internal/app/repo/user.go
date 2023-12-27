@@ -6,6 +6,18 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
+func GetUserInfo(r *Repository, id uint) (ds.Users, error) {
+	var user ds.Users
+
+	result := r.db.Where("id = ?", id).Find(&user)
+
+	if result.Error != nil {
+		return ds.Users{}, result.Error
+	}
+
+	return user, nil
+}
+
 func (r *Repository) AddUser(newUser *ds.Users) error {
 	result := r.db.Create(&newUser)
 	if result.Error != nil {

@@ -40,6 +40,8 @@ type Assembly struct {
 	Status                string    `gorm:"type:text" json:"status"`
 	Name                  string    `gorm:"type:text" json:"factory"`
 	Creator               uint      `json:"creator_id"`
+	CreatorLogin          string    `json:"creator_login"`
+	AdminLogin            string    `json:"admin_login"`
 	Description           string    `gorm:"type:text" json:"description"`
 }
 
@@ -59,8 +61,9 @@ type AddToAssemblyID struct {
 }
 
 type AssemblyForm struct {
-	Factory_id uint `json:"factory_id"`
-	User_id    uint `json:"user_id"`
+	Factory_id uint   `json:"factory_id"`
+	User_id    uint   `json:"user_id"`
+	Status     string `json:"status"`
 }
 
 type AutopartDetails struct {

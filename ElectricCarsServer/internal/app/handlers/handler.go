@@ -17,12 +17,12 @@ const (
 	addAutopartImage = baseURL + "/autoparts/upload-image"
 	addAssembly      = baseURL + "/autoparts/add-to-assembly"
 
-	assembly         = baseURL + "/assembly"
-	assemblyForm     = baseURL + "/assembly/form"
-	assemblyComplete = baseURL + "/assembly/complete"
-	assemblyReject   = baseURL + "/assembly/reject"
-	assemblyID       = baseURL + "/assembly/:id"
-	assemblyList     = baseURL + "/assembly/get-all"
+	assembly               = baseURL + "/assembly"
+	assemblyForm           = baseURL + "/assembly/form"
+	assemblyCompleteReject = baseURL + "/assembly/complete_reject"
+	assemblyReject         = baseURL + "/assembly/reject"
+	assemblyID             = baseURL + "/assembly/:id"
+	assemblyList           = baseURL + "/assembly/get-all"
 
 	autoparts_assembly = baseURL + "/autoparts_assembly"
 
@@ -63,8 +63,8 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 
 	router.PUT(assembly, h.UpdateAssembly)
 	router.PUT(assemblyForm, h.FormAssembly)
-	router.PUT(assemblyComplete, h.CompleteAssembly)
-	router.PUT(assemblyReject, h.RejectAssembly)
+	router.PUT(assemblyCompleteReject, h.CompleteRejectAssembly)
+	//router.PUT(assemblyReject, h.RejectAssembly)
 
 	router.DELETE(assembly, h.DeleteAssembly)
 	//=============================================//

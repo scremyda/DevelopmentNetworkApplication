@@ -186,7 +186,7 @@ func (h *Handler) AddToAssembly(ctx *gin.Context) {
 		return
 	}
 
-	if AddToAssemblyID.AutopartDetails.Autopart_name == "" || AddToAssemblyID.AutopartDetails.Autopart_id <= 0 ||
+	if AddToAssemblyID.AutopartDetails.Autopart_id <= 0 ||
 		AddToAssemblyID.User_id <= 0 {
 		err := errors.New("некорректные данные")
 		h.errorHandler(ctx, http.StatusBadRequest, err)

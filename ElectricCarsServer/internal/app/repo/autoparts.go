@@ -62,9 +62,13 @@ func (r *Repository) AddAutopart(autopart *ds.Autopart) error {
 }
 
 func (r *Repository) AddToAssembly(autopartDetails *ds.AddToAssemblyID) error {
+	userInfo, err := GetUserInfo(r, autopartDetails.User_id)
+	if err != nil {
+		return err
+	}
+
 	var autopart ds.Autopart
-	if err := r.db.Where("id = ? AND name = ?", autopartDetails.AutopartDetails.Autopart_id,
-		autopartDetails.AutopartDetails.Autopart_name).
+	if err := r.db.Where("id = ?", autopartDetails.AutopartDetails.Autopart_id).
 		First(&autopart).Error; err != nil {
 		return err
 	}
@@ -77,6 +81,7 @@ func (r *Repository) AddToAssembly(autopartDetails *ds.AddToAssemblyID) error {
 	// Проверка наличия записи с Status = utils.DraftString
 	var existingAssembly ds.Assembly
 	result := r.db.First(&existingAssembly, "creator = ? AND status = ?", autopartDetails.User_id, utils.DraftString)
+	request.CreatorLogin = userInfo.Login
 
 	if result.Error != nil {
 		// Если записи с Status = utils.DraftString у пользователя нет, создаем новую запись
