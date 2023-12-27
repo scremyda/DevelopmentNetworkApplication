@@ -15,11 +15,11 @@ import (
 
 const (
 	ServerToken = "qwerzxfsdfoiw"
-	ServiceUrl  = "http://127.0.0.1:8081/discussion/"
+	ServiceUrl  = "http://127.0.0.1:5000/discussion/"
 )
 
+// отправляет в python
 func (h *Handler) AssemblyDiscussionStart(c *gin.Context) {
-	// принимает заявку и отправляет её в сервис
 	var request ds.RequestAsyncService
 	if err := c.BindJSON(&request); err != nil {
 		c.AbortWithError(http.StatusBadRequest, errors.New("неверный формат"))
@@ -52,7 +52,7 @@ func (h *Handler) AssemblyDiscussionStart(c *gin.Context) {
 	c.AbortWithError(http.StatusInternalServerError, errors.New("заявка не принята в обработку"))
 }
 
-// ручка вызывается сервисом на python
+// принимает с python
 func (h *Handler) AssemblyDiscussionFinish(c *gin.Context) {
 	var request ds.RequestAsyncService
 	if err := c.BindJSON(&request); err != nil {
@@ -61,10 +61,10 @@ func (h *Handler) AssemblyDiscussionFinish(c *gin.Context) {
 		return
 	}
 
-	if request.Token != ServerToken {
-		c.AbortWithError(http.StatusForbidden, errors.New("неверный токен"))
-		return
-	}
+	//if request.Token != ServerToken {
+	//	c.AbortWithError(http.StatusForbidden, errors.New("неверный токен"))
+	//	return
+	//}
 
 	// сохраняем в базу
 	err := h.Repository.SaveAssemblyDiscussion(request)

@@ -27,9 +27,9 @@ func main() {
 		panic("cant migrate db:" + err.Error())
 	}
 	users := []ds.Users{
-		{Login: "admin", Name: "admin", Password: "admin", IsModerator: true},
-		{Login: "scremyda", Name: "scremyda", Password: "scremyda", IsModerator: false},
-		{Login: "user3", Name: "user3", Password: "password3", IsModerator: false},
+		//{Login: "admin", Name: "admin", Password: "admin", IsModerator: true},
+		//{Login: "scremyda", Name: "scremyda", Password: "scremyda", IsModerator: false},
+		//{Login: "user3", Name: "user3", Password: "password3", IsModerator: false},
 	}
 	db.Create(&users)
 }

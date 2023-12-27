@@ -111,5 +111,5 @@ type UserSignUp struct {
 type RequestAsyncService struct {
 	AssemblyID             int    `json:"assemblyId"`
 	DiscussionWithSupplier string `json:"discussion"`
-	Token                  string `json:"Server-Token"`
+	Token                  string `json:"Token"`
 }
