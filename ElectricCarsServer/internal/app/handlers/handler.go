@@ -26,13 +26,13 @@ const (
 	addAutopartImage = baseURL + "/autoparts/upload-image"
 	addAssembly      = baseURL + "/autoparts/add-to-assembly"
 
-	assembly           = baseURL + "/assembly"
-	assemblyForm       = baseURL + "/assembly/form"
-	assemblyComplete   = baseURL + "/assembly/complete"
-	assemblyReject     = baseURL + "/assembly/reject"
-	assemblyID         = baseURL + "/assembly/:id"
-	assemblyList       = baseURL + "/assembly/get-all"
-	assemblyDiscussion = baseURL + "/assembly/discussion"
+	assembly               = baseURL + "/assembly"
+	assemblyForm           = baseURL + "/assembly/form"
+	assemblyComplete       = baseURL + "/assembly/complete"
+	assemblyCompleteReject = baseURL + "/assembly/complete_reject"
+	assemblyID             = baseURL + "/assembly/:id"
+	assemblyList           = baseURL + "/assembly/get-all"
+	assemblyDiscussion     = baseURL + "/assembly/discussion"
 
 	autoparts_assembly = baseURL + "/autoparts_assembly"
 
@@ -95,8 +95,8 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 
 	// статусы
 	router.PUT(assemblyForm, h.WithAuthCheck([]models.Role{models.Client}), h.FormAssembly)
-	router.PUT(assemblyComplete, h.WithAuthCheck([]models.Role{models.Admin}), h.CompleteAssembly)
-	router.PUT(assemblyReject, h.WithAuthCheck([]models.Role{models.Admin}), h.RejectAssembly)
+	router.PUT(assemblyCompleteReject, h.WithAuthCheck([]models.Role{models.Admin}), h.CompleteRejectAssembly)
+	//router.PUT(assemblyReject, h.WithAuthCheck([]models.Role{models.Admin}), h.RejectAssembly)
 
 	router.DELETE(assembly, h.WithAuthCheck([]models.Role{models.Client}), h.DeleteAssembly)
 	//=============================================//

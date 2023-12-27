@@ -70,8 +70,9 @@ type AddToAssemblyID struct {
 }
 
 type AssemblyForm struct {
-	Factory_id uint `json:"factory_id"`
-	User_id    uint `json:"user_id"`
+	Factory_id uint   `json:"factory_id"`
+	User_id    uint   `json:"user_id"`
+	Status     string `json:"status"`
 }
 
 type AutopartDetails struct {

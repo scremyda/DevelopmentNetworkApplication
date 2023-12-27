@@ -186,7 +186,7 @@ func (r *Repository) FormAssembly(formAssembly ds.AssemblyForm) (ds.Assembly, er
 	return oldAssembly, result.Error
 }
 
-func (r *Repository) CompleteAssembly(formAssembly ds.AssemblyForm) (ds.Assembly, error) {
+func (r *Repository) CompleteRejectAssembly(formAssembly ds.AssemblyForm) (ds.Assembly, error) {
 	oldAssembly := ds.Assembly{}
 	if result := r.db.First(&oldAssembly, formAssembly.Factory_id); result.Error != nil {
 		return ds.Assembly{}, result.Error
@@ -196,7 +196,18 @@ func (r *Repository) CompleteAssembly(formAssembly ds.AssemblyForm) (ds.Assembly
 		return ds.Assembly{}, AssemblyNotFound
 	}
 
-	oldAssembly.Status = utils.Сompleted
+	userInfo, err := GetUserInfo(r, formAssembly.User_id)
+	if err != nil {
+		return ds.Assembly{}, err
+	}
+	if userInfo.IsModerator {
+		oldAssembly.AdminLogin = userInfo.Login
+	}
+	if formAssembly.Status == utils.Сompleted {
+		oldAssembly.Status = utils.Сompleted
+	} else {
+		oldAssembly.Status = utils.Rejected
+	}
 	oldAssembly.DateEnd = time.Now()
 
 	result := r.db.Save(oldAssembly)

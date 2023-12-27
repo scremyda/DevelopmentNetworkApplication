@@ -225,7 +225,7 @@ func (h *Handler) FormAssembly(ctx *gin.Context) {
 	h.successHandler(ctx, "formed_assembly", updatedAssembly)
 }
 
-// CompleteAssembly godoc
+// CompleteRejectAssembly godoc
 // @Summary      Complete Assembly by admin
 // @Description  Complete Assembly by admin
 // @Tags         Assembly
@@ -236,7 +236,7 @@ func (h *Handler) FormAssembly(ctx *gin.Context) {
 // @Failure      400          {object}  error
 // @Failure      500          {object}  error
 // @Router       /api/assembly/complete [put]
-func (h *Handler) CompleteAssembly(ctx *gin.Context) {
+func (h *Handler) CompleteRejectAssembly(ctx *gin.Context) {
 	var formAssembly ds.AssemblyForm
 	if err := ctx.BindJSON(&formAssembly); err != nil {
 		h.errorHandler(ctx, http.StatusBadRequest, err)
@@ -270,17 +270,13 @@ func (h *Handler) CompleteAssembly(ctx *gin.Context) {
 		return
 	}
 
-	updatedAssembly, err := h.Repository.CompleteAssembly(formAssembly)
+	updatedAssembly, err := h.Repository.CompleteRejectAssembly(formAssembly)
 	if err != nil {
 		h.errorHandler(ctx, http.StatusInternalServerError, err)
 		return
 	}
-	result := ds.AssemblyAdmin{
-		Assembly:   updatedAssembly,
-		AdminLogin: "Admin",
-	}
 
-	h.successHandler(ctx, "completed_assembly", result)
+	h.successHandler(ctx, "completed/rejected_assembly", updatedAssembly)
 }
 
 // RejectAssembly godoc
