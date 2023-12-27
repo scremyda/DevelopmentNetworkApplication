@@ -33,16 +33,17 @@ type Autopart_Assembly struct {
 }
 
 type Assembly struct {
-	ID                    uint      `gorm:"primary_key" json:"factory_id"`
-	DateStart             time.Time `json:"date_start"`
-	DateEnd               time.Time `json:"date_end"`
-	DateStartOfProcessing time.Time `json:"date_processing"`
-	Status                string    `gorm:"type:text" json:"status"`
-	Name                  string    `gorm:"type:text" json:"factory"`
-	Creator               uint      `json:"creator_id"`
-	CreatorLogin          string    `json:"creator_login"`
-	AdminLogin            string    `json:"admin_login"`
-	Description           string    `gorm:"type:text" json:"description"`
+	ID                     uint      `gorm:"primary_key" json:"factory_id"`
+	DateStart              time.Time `json:"date_start"`
+	DateEnd                time.Time `json:"date_end"`
+	DateStartOfProcessing  time.Time `json:"date_processing"`
+	Status                 string    `gorm:"type:text" json:"status"`
+	Name                   string    `gorm:"type:text" json:"factory"`
+	Creator                uint      `json:"creator_id"`
+	CreatorLogin           string    `json:"creator_login"`
+	AdminLogin             string    `json:"admin_login"`
+	Description            string    `gorm:"type:text" json:"description"`
+	DiscussionWithSupplier string    `gorm:"type:text" json:"discussion"`
 }
 
 type AssemblyDetails struct {
