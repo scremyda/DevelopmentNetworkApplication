@@ -11,6 +11,7 @@
 <body>
 <h1 class="header_h">Подробная информация</h1>
 <div class="line"></div>
+{{ $SearchValue := .SearchValue }}
 {{with .Autoparts}}
 <div class="info-card">
     <img class="info-img" src="/static/resources/{{.Image}}" alt="{{.Name}}">
@@ -23,7 +24,11 @@
     </ul>
     <span>Описание запчасти:</span>
     <p>{{.Description}}</p>
+    {{ if ne $SearchValue "" }}
+    <a href="/?search={{$SearchValue}}">На главную</a>
+    {{ else }}
     <a href="/">На главную</a>
+    {{ end }}
 </div>
 {{end}}
 </body>

@@ -16,6 +16,7 @@
     <button type="submit">Поиск</button>
 </form>
 {{ $AutopartCount := len .Autoparts }}
+{{ $SearchValue := .SearchValue }}
 {{ if gt $AutopartCount 0 }}
 {{range .Autoparts}}
     <div class="card">
@@ -27,7 +28,11 @@
         <li>{{.}}</li>
         {{end}}
         </ul>
+        {{ if ne $SearchValue "" }}
+        <a href="/autoparts/{{.ID}}/?search={{$SearchValue}}">Подробнее</a>
+        {{ else }}
         <a href="/autoparts/{{.ID}}">Подробнее</a>
+        {{ end }}
     </div>
 {{end}}
 {{ else }}
