@@ -12,7 +12,7 @@ import (
 func StartServer() {
 	r := gin.Default()
 
-	r.Static("/static", "./backened/static")
+	r.Static("/static", "./static")
 
 	autoparts := []backend.Autoparts{
 		{1, "Зарядный кабель", "Прицепное устройство Bosal, под фаркоп, в сборе с розеткой, Tesla Model X.", "image11.jpeg", []string{"1027581-00-D", "1046032-00-C", "10057987-001"}},
@@ -20,10 +20,10 @@ func StartServer() {
 		{3, "Электродвигатель", "Электродвигатель в сборе (теплообменник, бачок расширительный, трубки фреона, клапана, электропроводка), Tesla Model 3, Y.", "image33.jpg", []string{"1547595-96-F", ", 1523000-96-E", "1523001-00-D"}},
 	}
 
-	r.LoadHTMLGlob("backened/templates/*")
+	r.LoadHTMLGlob("templates/*")
 
 	r.GET("/", func(c *gin.Context) {
-		r.SetHTMLTemplate(template.Must(template.ParseFiles("./index.tmpl")))
+		r.SetHTMLTemplate(template.Must(template.ParseFiles("templates/index.tmpl")))
 		searchQuery := c.Query("search")
 		filteredautoparts := []backend.Autoparts{}
 		if searchQuery != "" {
@@ -46,7 +46,7 @@ func StartServer() {
 	})
 
 	r.GET("/autoparts/:id", func(c *gin.Context) {
-		r.SetHTMLTemplate(template.Must(template.ParseFiles("./info.tmpl")))
+		r.SetHTMLTemplate(template.Must(template.ParseFiles("templates/info.tmpl")))
 		id := c.Param("id")
 		var selectedautopart backend.Autoparts
 		for _, autopart := range autoparts {
@@ -61,5 +61,5 @@ func StartServer() {
 		})
 	})
 
-	r.Run(":8082")
+	r.Run(":8080")
 }
