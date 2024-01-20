@@ -23,7 +23,7 @@ func StartServer() {
 	r.LoadHTMLGlob("backened/templates/*")
 
 	r.GET("/", func(c *gin.Context) {
-		r.SetHTMLTemplate(template.Must(template.ParseFiles("./backened/templates/index.html")))
+		r.SetHTMLTemplate(template.Must(template.ParseFiles("./index.tmpl")))
 		searchQuery := c.Query("search")
 		filteredautoparts := []backend.Autoparts{}
 		if searchQuery != "" {
@@ -32,18 +32,21 @@ func StartServer() {
 					filteredautoparts = append(filteredautoparts, autopart)
 				}
 			}
-			c.HTML(http.StatusOK, "index.html", gin.H{
-				"Autoparts": filteredautoparts,
+
+			c.HTML(http.StatusOK, "index.tmpl", gin.H{
+				"Autoparts":   filteredautoparts,
+				"SearchValue": searchQuery, // добавлено здесь
 			})
+
 		} else {
-			c.HTML(http.StatusOK, "index.html", gin.H{
+			c.HTML(http.StatusOK, "index.tmpl", gin.H{
 				"Autoparts": autoparts,
 			})
 		}
 	})
 
 	r.GET("/autoparts/:id", func(c *gin.Context) {
-		r.SetHTMLTemplate(template.Must(template.ParseFiles("./backened/templates/info.html")))
+		r.SetHTMLTemplate(template.Must(template.ParseFiles("./info.tmpl")))
 		id := c.Param("id")
 		var selectedautopart backend.Autoparts
 		for _, autopart := range autoparts {
@@ -53,25 +56,10 @@ func StartServer() {
 			}
 		}
 
-		c.HTML(http.StatusOK, "info.html", gin.H{
+		c.HTML(http.StatusOK, "info.tmpl", gin.H{
 			"Autoparts": selectedautopart,
 		})
 	})
-	//r.GET("/search", func(c *gin.Context) {
-	//	searchQuery := c.Query("search")
-	//
-	//	filteredautoparts := []backend.Autoparts{}
-	//	for _, autopart := range autoparts {
-	//		if strings.Contains(strings.ToLower(autopart.Name), strings.ToLower(searchQuery)) {
-	//			filteredautoparts = append(filteredautoparts, autopart)
-	//		}
-	//	}
-	//
-	//	c.HTML(http.StatusOK, "index.html", gin.H{
-	//		"Autoparts": filteredautoparts,
-	//	})
-	//
-	//})
 
-	r.Run(":8080")
+	r.Run(":8082")
 }
