@@ -24,4 +24,4 @@
 
 # Домашнее задание:
 - [Интерфес модератора](https://github.com/scremyda/DevelopmentNetworkApplicationFrontend/tree/ModeratorService)
-- [РПЗ](https://github.com/DmitriyKomarovCoder/RIP/blob/main/DOCS/%D0%A0%D0%9F%D0%97%20%D0%9A%D0%BE%D0%BC%D0%B0%D1%80%D0%BE%D0%B2%20%D0%98%D0%A35-53%D0%91.docx)
+- [РПЗ](https://github.com/scremyda/DevelopmentNetworkApplication/blob/main/DOCS/%D0%A0%D0%9F%D0%97%20%D0%91%D0%B5%D0%BB%D0%BE%D0%B7%D0%B5%D1%80%D0%BE%D0%B2%20%D0%98%D0%A35-54%D0%91.docx)
