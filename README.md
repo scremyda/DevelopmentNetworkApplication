@@ -17,7 +17,7 @@
 # Фронтенд:
 - [SPA (лаб 4)](https://github.com/scremyda/DevelopmentNetworkApplicationFrontend/tree/frontend/SPA)
 - [Redux (лаб 6)](https://github.com/scremyda/DevelopmentNetworkApplicationFrontend/tree/Redux)
-- [Pages](https://scremyda.github.io/DevelopmentNetworkApplicationFrontend/autoparts)
+- [Pages](https://scremyda.github.io/DevelopmentNetworkApplicationFrontend)
 
 # Мобильное приложение:
 - [React Native (лаб 7)](https://github.com/scremyda/DevelopmentNetworkApplicationMobile/tree/mobile/ReactNative)
