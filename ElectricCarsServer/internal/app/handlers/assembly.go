@@ -22,7 +22,7 @@ const (
 func (h *Handler) AssemblyDiscussionStart(c *gin.Context) {
 	var request ds.RequestAsyncService
 	if err := c.BindJSON(&request); err != nil {
-		c.AbortWithError(http.StatusBadRequest, errors.New("неверный формат"))
+		c.AbortWithError(http.StatusBadRequest, errors.New("Неверный тип данных"))
 		return
 	}
 
@@ -46,10 +46,10 @@ func (h *Handler) AssemblyDiscussionStart(c *gin.Context) {
 	}
 
 	if resp.StatusCode == 200 {
-		c.JSON(http.StatusOK, gin.H{"message": "заявка принята в обработку"})
+		c.JSON(http.StatusOK, gin.H{"message": "Принято в обработку"})
 		return
 	}
-	c.AbortWithError(http.StatusInternalServerError, errors.New("заявка не принята в обработку"))
+	c.AbortWithError(http.StatusInternalServerError, errors.New("Не принято в обработку"))
 }
 
 // принимает с python
@@ -61,10 +61,10 @@ func (h *Handler) AssemblyDiscussionFinish(c *gin.Context) {
 		return
 	}
 
-	//if request.Token != ServerToken {
-	//	c.AbortWithError(http.StatusForbidden, errors.New("неверный токен"))
-	//	return
-	//}
+	if request.Token != ServerToken {
+		c.AbortWithError(http.StatusForbidden, errors.New("неверный токен"))
+		return
+	}
 
 	// сохраняем в базу
 	err := h.Repository.SaveAssemblyDiscussion(request)
@@ -72,7 +72,7 @@ func (h *Handler) AssemblyDiscussionFinish(c *gin.Context) {
 		log.Println(err)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "данные сохранены"})
+	c.JSON(http.StatusOK, gin.H{"message": "Полученные данные сохранились"})
 }
 
 // AssembliesList godoc

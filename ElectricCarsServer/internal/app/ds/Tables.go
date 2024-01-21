@@ -42,7 +42,7 @@ type Assembly struct {
 	DateStartOfProcessing  time.Time `json:"date_processing"`
 	Status                 string    `gorm:"type:text" json:"status"`
 	Name                   string    `gorm:"type:text" json:"factory"`
-	Creator                uint      `json:"creator_id"`
+	Creator                uint      `json:"-"`
 	Description            string    `gorm:"type:text" json:"description"`
 	CreatorLogin           string    `json:"creator_login"`
 	AdminLogin             string    `json:"admin_login"`
