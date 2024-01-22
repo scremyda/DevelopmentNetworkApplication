@@ -15,7 +15,7 @@
 - [Асинхронный сервис (лаб 8)](https://github.com/scremyda/DevelopmentNetworkApplicationAsyncService/tree/AsyncService)
 
 # Фронтенд:
-- [SPA (лаб 4)](https://github.com/scremyda/DevelopmentNetworkApplicationFrontend/tree/frontend/SPA)
+- [SPA (лаб 4)](https://github.com/scremyda/DevelopmentNetworkApplicationFrontend/tree/SPA)
 - [Redux (лаб 6)](https://github.com/scremyda/DevelopmentNetworkApplicationFrontend/tree/Redux)
 - [Pages](https://scremyda.github.io/DevelopmentNetworkApplicationFrontend)
 
