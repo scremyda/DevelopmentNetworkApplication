@@ -26,10 +26,10 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 }
 
 func registerStatic(router *gin.Engine) {
-	router.LoadHTMLGlob("backened/static/templates/*")
-	router.Static("/static", "././backened/static")
-	router.Static("/css", "./static")
-	router.Static("/img", "./static")
+	router.LoadHTMLGlob("static/templates/*")
+	router.Static("/static", "static")
+	router.Static("/css", "/static")
+	router.Static("/img", "/static")
 }
 
 func (h *Handler) errorHandler(ctx *gin.Context, errorStatusCode int, err error) {

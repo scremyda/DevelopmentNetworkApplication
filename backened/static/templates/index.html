@@ -14,7 +14,7 @@
 <h1 class="header_h">Запчасти для электромобиля</h1>
 <div class="line"></div>
 <form action="/" method="GET">
-    <input type="text" name="search" placeholder="Поиск по названию">
+    <input type="text" name="search" placeholder="Поиск по названию" value="{{.SearchQuery}}">
     <button type="submit">Поиск</button>
 </form>
 {{if eq (len .Autoparts) 0}}

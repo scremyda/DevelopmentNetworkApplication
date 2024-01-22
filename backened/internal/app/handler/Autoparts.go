@@ -24,7 +24,8 @@ func (h *Handler) AutopartsList(ctx *gin.Context) {
 
 		}
 		ctx.HTML(http.StatusOK, "index.html", gin.H{
-			"Autoparts": filteredautoparts,
+			"Autoparts":   filteredautoparts,
+			"SearchQuery": searchQuery,
 		})
 
 	}

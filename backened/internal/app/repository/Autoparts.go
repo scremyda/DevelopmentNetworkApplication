@@ -8,20 +8,19 @@ import (
 
 func (r *Repository) Searchautopart(search string) (*[]ds.Autopart, error) {
 	var autoparts []ds.Autopart
+
 	if search == "" {
-		r.db.Where("Status = ?", "Available").Find(&autoparts)
+		if err := r.db.Where("status = ?", "true").Find(&autoparts).Error; err != nil {
+			return nil, err
+		}
 		return &autoparts, nil
 	}
-	r.db.Find(&autoparts)
 
-	var filteredautoparts []ds.Autopart
-	for _, autopart := range autoparts {
-		if strings.Contains(strings.ToLower(autopart.Name), strings.ToLower(search)) {
-			filteredautoparts = append(filteredautoparts, autopart)
-		}
+	if err := r.db.Where("LOWER(name) LIKE ? AND status = true", "%"+strings.ToLower(search)+"%").Find(&autoparts).Error; err != nil {
+		return nil, err
 	}
 
-	return &filteredautoparts, nil
+	return &autoparts, nil
 }
 
 func (r *Repository) AutopartById(id string) (*ds.Autopart, error) {
@@ -32,6 +31,6 @@ func (r *Repository) AutopartById(id string) (*ds.Autopart, error) {
 }
 
 func (r *Repository) Deleteautopart(id string) {
-	query := "UPDATE autoparts SET Status = 'Deleted' WHERE id = $1"
+	query := "UPDATE autoparts SET Status = 'false' WHERE id = $1"
 	r.db.Exec(query, id)
 }

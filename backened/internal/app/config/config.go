@@ -19,7 +19,7 @@ type Config struct {
 func NewConfig(ctx *log.Logger) (*Config, error) {
 	var err error
 
-	configName := "config"
+	configName := "config.toml"
 	_ = godotenv.Load()
 	if os.Getenv("CONFIG_NAME") != "" {
 		configName = os.Getenv("CONFIG_NAME")
