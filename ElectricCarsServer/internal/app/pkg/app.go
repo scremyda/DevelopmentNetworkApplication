@@ -29,7 +29,7 @@ func (a *Application) RunApp() {
 	a.Handler.RegisterHandler(a.Router)
 
 	serverAddress := fmt.Sprintf("%s:%d", a.Config.ServiceHost, a.Config.ServicePort)
-	serverAddress = "0.0.0.0:8080" // TODO: fix
+	serverAddress = "127.0.0.1:8080" // TODO: fix
 	if err := a.Router.Run(serverAddress); err != nil {
 		a.Logger.Fatalln(err)
 	}

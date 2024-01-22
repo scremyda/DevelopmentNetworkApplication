@@ -10,7 +10,7 @@ import (
 )
 
 func (h *Handler) AutopartsList(ctx *gin.Context) {
-	queryBrand, _ := ctx.GetQuery("name")
+	queryBrand, _ := ctx.GetQuery("autopart")
 
 	autoparts, err := h.Repository.AutopartsList(queryBrand)
 	if err != nil {
