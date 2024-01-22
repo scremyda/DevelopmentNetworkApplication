@@ -6,7 +6,7 @@
 # Бэкенд:
 ## Основной сервис
 - [SSR (лаб 1)](https://github.com/scremyda/DevelopmentNetworkApplication/tree/backend/SSR)
-- [База данных (лаб 2)](https://github.com/scremyda/DevelopmentNetworkApplication/tree/backend/Database)
+- [База данных (лаб 2)](https://github.com/scremyda/DevelopmentNetworkApplication/tree/backend/DataBase)
 - [REST-API (лаб 3)](https://github.com/scremyda/DevelopmentNetworkApplication/tree/backend/RestAPI)
 - [Аутентификация и авторизация (лаб 5)](https://github.com/scremyda/DevelopmentNetworkApplication/tree/backend/Auth)
 - [Взаимодействие с асинхронным сервисом (лаб 8)](https://github.com/scremyda/DevelopmentNetworkApplication/tree/backend/AsyncService)
