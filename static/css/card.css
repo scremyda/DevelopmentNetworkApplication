@@ -1,0 +1,138 @@
+* {box-sizing: border-box;}
+
+body {
+    margin: 0;
+    background-color: #F9F0DA;
+}
+
+.card {
+    background-color:#fff;
+    width: 49%;
+    margin: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    border-radius: 5px;
+    display: inline-block;
+    vertical-align: top;
+    
+}
+
+.img-card {
+    border-radius: 5px 5px 0 0;
+    width: 100%;
+    height: 400px;
+}
+
+.container {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.button-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px; 
+}
+
+#button-url {
+    margin-right: 10px;
+    background-color: #7BA7AB;
+    color: #fff;
+    border: none;
+    padding: 10px 20px; 
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    text-decoration: none;
+}
+
+#button-url:hover {
+    background-color: #7B93B8; 
+}
+
+.delete-button {
+    background-color: #F75331; /* Красный цвет */
+    color: #fff; /* Белый цвет текста */
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.object {
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.search-form {
+    position: relative;
+    width: 300px;
+    margin: 0 auto;
+}
+
+.search {
+    background: #A3D0C3;
+    display: flex; /* Добавляем свойство для создания флекс-контейнера */
+    align-items: center; /* Выравниваем элементы по центру по вертикали */
+    height: 60px;
+    position: relative; /* Добавляем позиционирование, если необходимо */
+}
+
+
+.search input {
+    width: 100%;
+    height: 42px;
+    padding-left: 10px;
+    border: 2px solid #7BA7AB;
+    border-radius: 5px;
+    outline: none;
+    background: #F9F0DA;
+    color: #9E9C9C;
+}
+
+
+.search button {
+    position: absolute; 
+    top: 0;
+    right: 0px;
+    width: 42px;
+    height: 42px;
+    border: none;
+    background: #7BA7AB;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+
+.search button:before {
+    content: "\f002";
+    font-family: FontAwesome;
+    font-size: 16px;
+    color: #F9F0DA;
+}
+
+.pages2 {
+    background-color: #fff;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    border-radius: 5px;
+    padding: 40px;
+    width: 70%;
+}
+
+#main-img {
+    width: 100%;
+}
+
+#title-text {
+    clear: both;
+    color: white;
+    padding: 10px;
+}
